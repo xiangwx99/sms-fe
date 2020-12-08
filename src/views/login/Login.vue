@@ -1,13 +1,27 @@
 <template>
-  <div class="wrap" :style="banner">
+  <div class="login" :style="banner">
     <el-card class="box-card">
       <el-row >
-        <div class="head-portrait">
-          <img :src="imgUrl" alt="">
-        </div>
+        <div class="head-portrait"><img :src="imgUrl" alt=""></div>
       </el-row>
+      <el-row style="font-size: 24px">{{title}}</el-row>
       <el-row>
-        登录管理系统
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="账号：" prop="phoneNumber">
+            <el-input v-model="ruleForm.phoneNumber" placeholder="请输入账号"/>
+          </el-form-item>
+          <el-form-item label="密码：" prop="password">
+            <el-input v-model="ruleForm.password" placeholder="请输入密码"/>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="$_submit" style="width: 100%;">{{option}}</el-button>
+          </el-form-item>
+          <el-form-item label="">
+            <el-row class="clear-fix">
+              <a class="right" @click="changeOption">{{options}}</a>
+            </el-row>
+          </el-form-item>
+        </el-form>
       </el-row>
     </el-card>
   </div>
@@ -18,8 +32,23 @@ export default {
   name: 'Login',
   data() {
     return {
-      phoneNumber: null,
-      password: null,
+      title: "用户登录",
+      option: "登录",
+      options: "注册账号?",
+      ruleForm: {
+        phoneNumber: null,
+        password: null,
+      },
+      rules: {
+        phoneNumber: [
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { min: 11, max: 11, message: '请输入正确的账号', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, message: '密码长度最少为6位', trigger: 'blur' }
+        ]
+      },
       banner: {
         backgroundImage: 'url(' + require('../../assets/img/login_banner.jpg') + ')',
         backgroundRepe: 'norepeat',
@@ -30,27 +59,83 @@ export default {
     }
   },
 
+  methods: {
+    submitForm(formName) {
+      let issue = true
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          return true
+        } else {
+          issue = false
+          return false;
+        }
+      });
+      return issue
+    },
+
+    changeOption() {
+      this.clearInput()
+      if(this.title === '用户登录') {
+        this.title = '用户注册'
+        this.option = "注册"
+        this.options = '登录'
+      } else {
+        this.title = '用户登录'
+        this.options = '注册账号?'
+        this.option = "登录"
+      }
+    },
+
+    clearInput() {
+      Object.keys(this.ruleForm).forEach(key => {
+        this.ruleForm[key] = null
+      })
+    },
+
+    $_submit() {
+      let issue = this.submitForm('ruleForm')
+      if(issue) {
+        if(this.title === '用户登录') {
+          console.log('登录');
+        } else {
+          console.log('注册');
+        }
+      }
+    }
+  }
 }
 </script>
 
-<style lang="sass" scoped>
-.wrap
+<style lang="sass">
+.login
   height: 100vh
   width: 100vw
-.box-card
-  position: absolute
-  top: 50%
-  left: 50%
-  transform: translate(-50%, -50%)
-  width: 30%
-.el-row
-  text-align: center
-img, .head-portrait
-  width: 48px
-  height: 48px
-  border-radius: 50%
-  overflow: hidden
-.head-portrait
-  margin: 0 auto
-  margin-bottom: 24px
+  .box-card
+    position: absolute
+    background-color: #F3F4F6
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    width: 30%
+  .el-row
+    text-align: center
+  img, .head-portrait
+    width: 60px
+    height: 60px
+    border-radius: 50%
+    overflow: hidden
+  .head-portrait
+    margin: 0 auto
+    margin-bottom: 24px
+  .el-form-item__label
+    padding: 0
+    padding-right: 10px
+  .el-form-item__label:before
+    content: '' !important
+  form.el-form.demo-ruleForm
+    padding: 20px 20px 0 2px
+  .clear-fix a
+    color: #409EFF
+  .el-form-item:nth-child(4)
+    margin-bottom: 0
 </style>>

@@ -57,10 +57,21 @@ a {
 }
 
 .left {
-  float: left;
+  float: left
 }
 
 .right {
-  float: right;
+  float: right
 }
 
+.flex {
+  display: flex;
+}
+
+.space-between {
+  justify-content: space-between
+}
+
+.space-around {
+  justify-content: space-around;
+}
