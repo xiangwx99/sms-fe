@@ -11,10 +11,10 @@
             <el-input v-model="ruleForm.phoneNumber" placeholder="请输入账号"/>
           </el-form-item>
           <el-form-item label="密码：" prop="password">
-            <el-input v-model="ruleForm.password" placeholder="请输入密码"/>
+            <el-input v-model="ruleForm.password" placeholder="请输入密码" show-password/>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="$_submit" style="width: 100%;">{{option}}</el-button>
+            <el-button type="primary" @click="$_submit" style="width: 100%;" >{{option}}</el-button>
           </el-form-item>
           <el-form-item label="">
             <el-row class="clear-fix">
@@ -59,6 +59,20 @@ export default {
     }
   },
 
+  mounted() {
+    if(this.$route.path === '/login') {
+      let that = this
+      document.onkeydown = function(e){
+        if(e.keyCode === 13) {
+          that.$_submit()
+        } else {
+          return
+        }
+      }
+    }
+  },
+
+
   methods: {
     submitForm(formName) {
       let issue = true
@@ -74,7 +88,7 @@ export default {
     },
 
     changeOption() {
-      this.clearInput()
+      this.resetForm('ruleForm')
       if(this.title === '用户登录') {
         this.title = '用户注册'
         this.option = "注册"
@@ -86,10 +100,8 @@ export default {
       }
     },
 
-    clearInput() {
-      Object.keys(this.ruleForm).forEach(key => {
-        this.ruleForm[key] = null
-      })
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
     },
 
     $_submit() {
@@ -97,13 +109,15 @@ export default {
       if(issue) {
         if(this.title === '用户登录') {
           console.log('登录');
+          this.$router.push('/')
         } else {
           console.log('注册');
         }
       }
-    }
+    },
   }
 }
+
 </script>
 
 <style lang="sass">

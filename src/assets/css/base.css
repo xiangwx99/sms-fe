@@ -75,3 +75,7 @@ a {
 .space-around {
   justify-content: space-around;
 }
+
+.icon {
+  font-size: 1.715rem !important
+}
