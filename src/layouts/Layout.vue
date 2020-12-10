@@ -33,21 +33,18 @@
         </div>
     <el-menu :default-openeds="['1']">
       <el-submenu index="1">
-        <template slot="title"><i class="el-icon-message"></i><span style="color: #fff">导航一</span></template>
+        <template slot="title"><i class="el-icon-message"></i><span style="color: #fff">用户管理</span></template>
         <el-menu-item-group>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
+          <el-menu-item index="1-1">学生信息</el-menu-item>
+          <el-menu-item index="1-2">行为管理</el-menu-item>
+          <el-menu-item index="1-3">选课管理</el-menu-item>
         </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title"><span style="color: #fff">选项4</span></template>
-          <el-menu-item index="1-4-1">选项4-1</el-menu-item>
-        </el-submenu>
       </el-submenu>
       <el-submenu index="2">
-        <template slot="title"><i class="el-icon-menu"></i><span style="color: #fff">导航二</span></template>
+        <template slot="title"><i class="el-icon-s-tools"></i><span style="color: #fff">系统管理</span></template>
         <el-menu-item-group>
-          <el-menu-item index="2-1">选项1</el-menu-item>
-          <el-menu-item index="2-2">选项2</el-menu-item>
+          <el-menu-item index="2-1">学生信息</el-menu-item>
+          <el-menu-item index="2-2">课程管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
     </el-menu>
@@ -125,7 +122,7 @@ export default {
     color: #fff
     background-color: #19AAF8 
   .el-submenu__title i
-    color: red
+    color: #fff
   .el-submenu__title:hover:hover
     background-color: rgba(0, 0, 0, .1)
   .el-menu-item:hover
@@ -138,4 +135,6 @@ export default {
     background-color: rgba(0, 0, 0, .1)
   .el-card__body
     height: 100%
+  .el-menu-item-group__title
+    padding: 0
 </style>>
