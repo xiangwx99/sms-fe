@@ -10,7 +10,7 @@
         </el-row>
         <el-row class="right flex">
           <span style="font-weight: 700; margin-right: 35px; margin-top: 3px; color: #19AAF8">吴彦祖</span>
-          <el-button class="el-iconmessage icon message"></el-button>
+          <el-button class="el-iconmessage icon message"  @click="lookMessages"></el-button>
           <el-dropdown class="right">
             <div style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden; backgroundColor: pink; cursor: pointer">
               <img src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3163479695,2609507199&fm=26&gp=0.jpg" alt="" style="width: 32px; height: 32px;"/>
@@ -71,6 +71,9 @@ export default {
   },
 
   methods: {
+    lookMessages() {
+      this.$router.push('/messages')
+    },
     personDetail() {
       this.$router.push('/profile')
     },
@@ -133,4 +136,6 @@ export default {
   .el-menu-item.is-active
     color: #fff
     background-color: rgba(0, 0, 0, .1)
+  .el-card__body
+    height: 100%
 </style>>
