@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <better-scroll class="bscroll" @scroll="scroll">
+    <better-scroll class="bscroll">
       <div>
         <el-row>
           <el-col class="title">用户头像</el-col>
@@ -181,10 +181,8 @@ export default {
         }
       }
     },
-
-    scroll(val) {
-      console.log(111);
-      console.log(val);
+    pulldown() {
+      console.log("========>刷新");
     }
   }
 }

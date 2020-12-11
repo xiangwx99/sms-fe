@@ -116,7 +116,8 @@ export default {
 
       // 4.是否派发顶部下拉事件，用于下拉刷新
       if(this.pulldown) {
-        this.scroll.on('touchend', pos => {
+        this.scroll.on('scrollStart', pos => {
+          console.log(this.scroll);
           if(pos.y > 50) {
             this.$emit('pulldown')
           }
@@ -133,6 +134,7 @@ export default {
 
     refresh() {
       // 代理better-scroll的refresh方法
+      console.log(this.scroll);
       this.scroll && this.scroll.refresh()
     }
   },
