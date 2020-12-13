@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { loginStudent, addStudent } from 'network/students'
+import md5 from 'blueimp-md5'
 export default {
   name: 'Login',
   data() {
@@ -104,14 +106,34 @@ export default {
         this.$refs[formName].resetFields();
     },
 
-    $_submit() {
+    async $_submit() {
       let issue = this.submitForm('ruleForm')
       if(issue) {
         if(this.title === '用户登录') {
           console.log('登录');
-          this.$router.push('/')
+          let ret = await loginStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
+          if(ret.err_code === 1) {
+            this.$router.push('/')
+          } else if(ret.err_code === 3) {
+            this.$notify.error({
+              title: '登录失败',
+              message: '账号或者密码错误'
+            })
+          }
         } else {
-          console.log('注册');
+          let ret = await addStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
+          console.log(ret)
+          if(ret.err_code === 1) {
+            this.$notify.error({
+              title: '添加成功',
+              type: 'success'
+            })
+          } else if(ret.err_code === 2) {
+            this.$notify.error({
+              title: '注册失败',
+              message: '该账号已存在'
+            })            
+          }
         }
       }
     },

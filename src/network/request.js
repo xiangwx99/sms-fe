@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export default function request(config) {
+export default function request(config, method) {
   return new Promise((resolve, reject) => {
     const instance = axios.create({
       baseURL: 'http://127.0.0.1:8000',
