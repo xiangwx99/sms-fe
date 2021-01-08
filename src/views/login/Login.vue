@@ -32,9 +32,11 @@
 </template>
 
 <script>
-import { loginStudent, addStudent } from 'network/students'
 import md5 from 'blueimp-md5'
-import {notifyError, notifySuccess} from "../../function/utils";
+import { loginStudent, addStudent } from 'network/students'
+import {notifyError, notifySuccess} from 'function/utils';
+import localStorage from 'function/localstorage'
+
 export default {
   name: 'Login',
   data() {
@@ -120,14 +122,14 @@ export default {
           if(ret.err_code === 1) {
             this.$router.push('/')
           } else if(ret.err_code === 3) {
-            notifyError(this.$message, message: '账号或者密码错误!')
+            notifyError(this.$message, '账号或者密码错误!')
           }
         } else {
           let ret = await addStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
           if(ret.err_code === 1) {
-            notifySuccess(this.$message, message: '注册成功!')
+            notifySuccess(this.$message,  '注册成功!')
           } else if(ret.err_code === 2) {
-            notifyError(this.$message, message: '账号已存在!')
+            notifyError(this.$message,  '账号已存在!')
           }
         }
       }
