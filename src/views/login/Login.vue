@@ -122,7 +122,6 @@ export default {
           }
         } else {
           let ret = await addStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
-          console.log(ret)
           if(ret.err_code === 1) {
             this.$notify.error({
               title: '添加成功',

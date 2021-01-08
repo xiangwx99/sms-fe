@@ -8,6 +8,7 @@ export default function request(config, method) {
     })
     
     instance.interceptors.request.use(req => {
+      req.headers['token'] = '123'
       return req
     }, err => {
       console.log(err);
