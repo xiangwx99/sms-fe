@@ -21,11 +21,15 @@
               <el-row>
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px; padding-right: 20px;">账号</el-col>
-                  <el-col :span="16"><el-input v-model="studentInfo.accountnumber" disabled/></el-col>
+                  <el-col :span="16">
+                    <el-input v-model="studentInfo.accountnumber" disabled/>
+                  </el-col>
                 </el-col>
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px">姓名</el-col>
-                  <el-col :span="16"><el-input v-model="studentInfo.name" placeholder="请输入您的真实姓名" /></el-col>
+                  <el-col :span="16">
+                    <el-input v-model="studentInfo.name" placeholder="请输入您的真实姓名" />
+                  </el-col>
                 </el-col>
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px">民族</el-col>
@@ -52,11 +56,15 @@
               <el-row style="margin: 1rem 0">
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px; padding-right: 20px;">年龄</el-col>
-                  <el-col :span="16"><el-input v-model="studentInfo.age" placeholder="请输入您的年龄" /></el-col>
+                  <el-col :span="16">
+                    <el-input v-model="studentInfo.age" placeholder="请输入您的年龄" />
+                  </el-col>
                 </el-col>
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px; padding-right: 20px;">身份证</el-col>
-                  <el-col :span="16"><el-input v-model="studentInfo.idcard" placeholder="请输入您的身份证号" /></el-col>
+                  <el-col :span="16">
+                    <el-input v-model="studentInfo.idcard" placeholder="请输入您的身份证号" />
+                  </el-col>
                 </el-col>
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px">所在院系</el-col>
@@ -94,24 +102,36 @@
               <el-row>
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px; padding-right: 20px;">旧密码</el-col>
-                  <el-col :span="16"><el-input v-model="studentInfo.oldpassword" placeholder="请输入当前密码" show-password /></el-col>
+                  <el-col :span="16">
+                    <el-input v-model="studentInfo.oldpassword"
+                              placeholder="请输入当前密码"
+                              show-password />
+                  </el-col>
                 </el-col>
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px">新密码</el-col>
                   <el-col :span="16">
-                    <el-input v-model="studentInfo.newpassword" placeholder="请输入新密码" show-password/>
+                    <el-input v-model="studentInfo.newpassword"
+                              placeholder="请输入新密码"
+                              show-password :disabled="!studentInfo.oldpassword"/>
                   </el-col>
                 </el-col>
                 <el-col :span="6">
                   <el-col style="lineHeight: 40px">确认密码</el-col>
-                  <el-col :span="16"><el-input v-model="studentInfo.confirmpassword" placeholder="请确认新密码" show-password /></el-col>
+                  <el-col :span="16">
+                    <el-input v-model="studentInfo.confirmpassword"
+                              placeholder="请确认新密码"
+                              show-password :disabled="!studentInfo.oldpassword || !studentInfo.newpassword"/>
+                  </el-col>
                 </el-col>
               </el-row>
             </el-form>
           </el-col>      
         </el-row>
 
-        <el-row style="margin: 1rem 0"><el-button type="primary" @click="saveProfile">保存</el-button></el-row>
+        <el-row style="margin: 1rem 0">
+          <el-button type="primary" @click="saveProfile">保存</el-button>
+        </el-row>
       </div>
     </better-scroll>
   </div>
@@ -119,6 +139,7 @@
 
 <script>
 import nationOptions from '../../mixins/getNation'
+import { notifySuccess, notifyError, notifyTips } from "../../function/utils";
 import ClickUpload from 'components/clickUpload/ClickUpload'
 import BetterScroll from 'components/betterScroll/BetterScroll'
 export default {
@@ -156,33 +177,25 @@ export default {
       this.studentInfo.imgUrl = url
     },
     saveProfile() {
-      if(this.studentInfo.oldpassword !== null) {
-        // 要修改密码
-        if(this.studentInfo.newpassword.length < 6) {
-          console.log("新密码长度必须在6位以上");
+      // 修改密码
+      if(this.studentInfo.oldpassword) {
+        if(!this.studentInfo.newpassword || !this.studentInfo.confirmpassword) {
+          notifyError(this.$message, '请确认新密码与确认密码是否输入!')
           return
-        } 
-        if(this.studentInfo.newpassword === this.studentInfo.confirmpassword) {
-
         } else {
-          console.log('两次输入的密码不统一');
-          return
+          if(this.studentInfo.newpassword.length < 6 || this.studentInfo.confirmpassword.length < 6) {
+            notifyTips(this.$message, '新密码长度至少六位!')
+            return
+          } else if(this.studentInfo.newpassword !== this.studentInfo.confirmpassword) {
+            notifyError(this.$message, '两次输入的密码不一致!')
+            return
+          }
+          console.log("修改密码")
         }
       } else {
         // 不修改密码
-        if(this.studentInfo.newpassword.length !== 0 || this.studentInfo.confirmpassword.length !== 0) {
-          this.$notify.error({
-            title: '修改出错',
-            message: '修改密码必须输入原始密码'
-          });
-          return
-        } else {
-
-        }
+        console.log("不修改密码")
       }
-    },
-    pulldown() {
-      console.log("========>刷新");
     }
   }
 }

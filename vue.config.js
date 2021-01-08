@@ -8,7 +8,8 @@ module.exports = {
         'assets': '@/assets',
         'network': '@/network',
         'views': '@/views',
-        'mixins': '@/mixins'
+        'mixins': '@/mixins',
+        'function': '@/function'
       }
     }
   }

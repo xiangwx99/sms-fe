@@ -6,11 +6,11 @@
       </el-row>
       <el-row style="font-size: 24px">{{title}}</el-row>
       <el-row>
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="账号：" prop="phoneNumber">
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" label-position="top">
+          <el-form-item label="账号" prop="phoneNumber">
             <el-input v-model="ruleForm.phoneNumber" placeholder="请输入账号"/>
           </el-form-item>
-          <el-form-item label="密码：" prop="password">
+          <el-form-item label="密码" prop="password">
             <el-input v-model="ruleForm.password" placeholder="请输入密码" show-password/>
           </el-form-item>
           <el-form-item>
@@ -18,6 +18,10 @@
           </el-form-item>
           <el-form-item label="">
             <el-row class="clear-fix">
+              <div class="left">
+                <el-radio v-model="radio" label="1">学生</el-radio>
+                <el-radio v-model="radio" label="2">教师</el-radio>
+              </div>
               <a class="right" @click="changeOption">{{options}}</a>
             </el-row>
           </el-form-item>
@@ -30,6 +34,7 @@
 <script>
 import { loginStudent, addStudent } from 'network/students'
 import md5 from 'blueimp-md5'
+import {notifyError, notifySuccess} from "../../function/utils";
 export default {
   name: 'Login',
   data() {
@@ -37,6 +42,7 @@ export default {
       title: "用户登录",
       option: "登录",
       options: "注册账号?",
+      radio: '1',
       ruleForm: {
         phoneNumber: null,
         password: null,
@@ -53,7 +59,7 @@ export default {
       },
       banner: {
         backgroundImage: 'url(' + require('../../assets/img/login_banner.jpg') + ')',
-        backgroundRepe: 'norepeat',
+        backgroundRepeat: 'norepeat',
         backgroundSize: '100% 100%',
         opacity: .8
       },
@@ -110,28 +116,18 @@ export default {
       let issue = this.submitForm('ruleForm')
       if(issue) {
         if(this.title === '用户登录') {
-          console.log('登录');
           let ret = await loginStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
           if(ret.err_code === 1) {
             this.$router.push('/')
           } else if(ret.err_code === 3) {
-            this.$notify.error({
-              title: '登录失败',
-              message: '账号或者密码错误'
-            })
+            notifyError(this.$message, message: '账号或者密码错误!')
           }
         } else {
           let ret = await addStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
           if(ret.err_code === 1) {
-            this.$notify.error({
-              title: '添加成功',
-              type: 'success'
-            })
+            notifySuccess(this.$message, message: '注册成功!')
           } else if(ret.err_code === 2) {
-            this.$notify.error({
-              title: '注册失败',
-              message: '该账号已存在'
-            })            
+            notifyError(this.$message, message: '账号已存在!')
           }
         }
       }
@@ -151,7 +147,7 @@ export default {
     top: 50%
     left: 50%
     transform: translate(-50%, -50%)
-    width: 30%
+    width: 25%
   .el-row
     text-align: center
   img, .head-portrait
@@ -160,14 +156,13 @@ export default {
     border-radius: 50%
     overflow: hidden
   .head-portrait
-    margin: 0 auto
-    margin-bottom: 24px
+    margin: 0 auto 24px
   .el-form-item__label
-    padding: 0
-    padding-right: 10px
+    padding: 0 10px 0 0
   .el-form-item__label:before
     content: '' !important
   form.el-form.demo-ruleForm
+    text-align: left
     padding: 20px 20px 0 2px
   .clear-fix a
     color: #409EFF
