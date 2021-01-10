@@ -25,7 +25,7 @@ obj.removeLocalStorage = function(key) {
 
 /** 清除所有 **/
 obj.removeAllLocalStorage = function() {
-  window.localStorage.clean()
+  window.localStorage.clear()
 }
 
 export default obj

@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import localStorage from 'function/localstorage'
 export default {
   name: 'Layout',
   data() {
@@ -75,6 +76,7 @@ export default {
       this.$router.push('/profile')
     },
     loginOut() {
+      localStorage.removeAllLocalStorage()
       this.$router.push('/login')
     }
   }

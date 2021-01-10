@@ -1,4 +1,5 @@
 import axios from 'axios'
+import localStorage from 'function/localstorage'
 
 export default function request(config, method) {
   return new Promise((resolve, reject) => {
@@ -8,7 +9,10 @@ export default function request(config, method) {
     })
     
     instance.interceptors.request.use(req => {
-      req.headers['token'] = '123'
+      let token = localStorage.getLocalStorage('token')
+      if(token) {
+        req['token'] = token
+      }
       return req
     }, err => {
       console.log(err);

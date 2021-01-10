@@ -19,8 +19,8 @@
           <el-form-item label="">
             <el-row class="clear-fix">
               <div class="left">
-                <el-radio v-model="radio" label="1">学生</el-radio>
-                <el-radio v-model="radio" label="2">教师</el-radio>
+                <el-radio v-model="radio" label="stu">学生</el-radio>
+                <el-radio v-model="radio" label="tea">教师</el-radio>
               </div>
               <a class="right" @click="changeOption">{{options}}</a>
             </el-row>
@@ -34,6 +34,7 @@
 <script>
 import md5 from 'blueimp-md5'
 import { loginStudent, addStudent } from 'network/students'
+import { loginTeacher, addTeacher } from 'network/teachers'
 import {notifyError, notifySuccess} from 'function/utils';
 import localStorage from 'function/localstorage'
 
@@ -44,7 +45,7 @@ export default {
       title: "用户登录",
       option: "登录",
       options: "注册账号?",
-      radio: '1',
+      radio: 'stu',
       ruleForm: {
         phoneNumber: null,
         password: null,
@@ -117,15 +118,29 @@ export default {
     async $_submit() {
       let issue = this.submitForm('ruleForm')
       if(issue) {
+        localStorage.removeAllLocalStorage()
         if(this.title === '用户登录') {
-          let ret = await loginStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
+          let ret
+          /** 学生登陆 **/
+          if(this.radio === 'stu') {
+            ret = await loginStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
+          } else {
+            ret = await loginTeacher(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
+          }
+          localStorage.putLocalStorage('token', ret.token)
           if(ret.err_code === 1) {
             this.$router.push('/')
           } else if(ret.err_code === 3) {
             notifyError(this.$message, '账号或者密码错误!')
           }
         } else {
-          let ret = await addStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
+          let ret
+          /** 学生注册 **/
+          if(this.radio === 'stu') {
+            ret = await addStudent(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
+          } else {
+            ret = await addTeacher(this.ruleForm.phoneNumber, md5(md5(this.ruleForm.password)))
+          }
           if(ret.err_code === 1) {
             notifySuccess(this.$message,  '注册成功!')
           } else if(ret.err_code === 2) {
@@ -149,7 +164,7 @@ export default {
     top: 50%
     left: 50%
     transform: translate(-50%, -50%)
-    width: 25%
+    width: 28%
   .el-row
     text-align: center
   img, .head-portrait
@@ -165,7 +180,7 @@ export default {
     content: '' !important
   form.el-form.demo-ruleForm
     text-align: left
-    padding: 20px 20px 0 2px
+    padding: 20px 0px 0 2px
   .clear-fix a
     color: #409EFF
   .el-form-item:nth-child(4)
