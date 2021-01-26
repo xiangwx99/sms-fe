@@ -208,6 +208,7 @@ export default {
   color: #333
   font-weight: 700
   margin-bottom: 1rem
+  padding-top: 20px
 .upload-wrap
   position: relative
   width: 88px

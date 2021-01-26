@@ -79,3 +79,14 @@ a {
 .icon {
   font-size: 1.715rem !important
 }
+
+/** input样式的统一 **/
+.el-input input {
+  height: 32px;
+  line-height: 32px;
+}
+
+.el-input .el-input__icon {
+  height: 32px;
+  line-height: 32px;
+}

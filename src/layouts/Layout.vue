@@ -5,19 +5,19 @@
         <el-row class="left">
           <div class="options">
             <span class="el-iconprofilefill" style="margin-right: 10px; color: #19AAF8"></span>
-            <span>{{"选择操作"}}</span>
+            <span>{{curOption ? curOption : '选择操作'}}</span>
           </div>
         </el-row>
         <el-row class="right flex">
           <span style="font-weight: 700; margin-right: 35px; margin-top: 3px; color: #19AAF8">吴彦祖</span>
-          <el-button class="el-iconmessage icon message"  @click="lookMessages"></el-button>
+          <el-button class="el-iconmessage icon message"  @click="choosePath('/messages', '查看消息')"></el-button>
           <el-dropdown class="right">
             <div style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden; backgroundColor: pink; cursor: pointer">
               <img src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3163479695,2609507199&fm=26&gp=0.jpg" alt="" style="width: 32px; height: 32px;"/>
             </div>
             <el-dropdown-menu>
-              <el-dropdown-item @click.native="personDetail">个人中心</el-dropdown-item>
-              <el-dropdown-item @click.native="loginOut">退出登录</el-dropdown-item>
+              <el-dropdown-item @click.native="choosePath('profile', '个人中心')">个人中心</el-dropdown-item>
+              <el-dropdown-item @click.native="choosePath('/loginout')">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-row>
@@ -31,20 +31,18 @@
             西南石油大学
           </div>
         </div>
-    <el-menu :default-openeds="['1']">
+        <el-menu :default-openeds="['1']">
       <el-submenu index="1">
-        <template slot="title"><i class="el-icon-message"></i><span style="color: #fff">用户管理</span></template>
+        <template slot="title"><i class="el-icon-menu"></i><span style="color: #fff">课程管理</span></template>
         <el-menu-item-group>
-          <el-menu-item index="1-1">学生信息</el-menu-item>
-          <el-menu-item index="1-2">行为管理</el-menu-item>
-          <el-menu-item index="1-3">选课管理</el-menu-item>
+          <el-menu-item index="1-1" @click.native="choosePath('/course', '选课中心')"><i class="el-icon-reading" style="color: #fff"></i>选课中心</el-menu-item>
+          <el-menu-item index="1-2" @click.native="choosePath('/grade','成绩查询')"><i class="el-icon-document" style="color: #fff"></i>成绩查询</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title"><i class="el-icon-s-tools"></i><span style="color: #fff">系统管理</span></template>
         <el-menu-item-group>
-          <el-menu-item index="2-1">学生信息</el-menu-item>
-          <el-menu-item index="2-2">课程管理</el-menu-item>
+          <el-menu-item index="2-1"><i class="el-icon-s-custom" style="color: #fff"></i>学生信息</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
     </el-menu>
@@ -64,20 +62,20 @@ export default {
   name: 'Layout',
   data() {
     return {
+      curOption: null,
       bannerUrl: require('../assets/img/swpu_logo.jpg')
     }
   },
 
   methods: {
-    lookMessages() {
-      this.$router.push('/messages')
-    },
-    personDetail() {
-      this.$router.push('/profile')
-    },
-    loginOut() {
-      localStorage.removeAllLocalStorage()
-      this.$router.push('/login')
+    choosePath(path, options) {
+      if(path === '/loginout') {
+        localStorage.removeAllLocalStorage()
+        this.$router.push('/login')
+      } else {
+        this.$router.push(path)
+        this.curOption = options
+      }
     }
   }
 }
@@ -139,4 +137,8 @@ export default {
     height: 100%
   .el-menu-item-group__title
     padding: 0
+  .el-card__body
+    padding-top: 0
+  .el-main
+    padding: 16px
 </style>>
