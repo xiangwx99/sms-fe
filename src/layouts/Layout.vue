@@ -33,17 +33,16 @@
         </div>
         <el-menu :default-openeds="['1']">
       <el-submenu index="1">
-        <template slot="title"><i class="el-icon-menu"></i><span style="color: #fff">课程管理</span></template>
+        <template slot="title"><i class="el-icon-menu"></i><span style="color: #fff">考试管理</span></template>
         <el-menu-item-group>
-          <el-menu-item index="1-1" @click.native="choosePath('/course', '选课中心')"><i class="el-icon-reading" style="color: #fff"></i>选课中心</el-menu-item>
+          <el-menu-item index="1-1" @click.native="choosePath('/examination', '考试中心')"><i class="el-icon-reading" style="color: #fff"></i>考试中心</el-menu-item>
           <el-menu-item index="1-2" @click.native="choosePath('/grade','成绩查询')"><i class="el-icon-document" style="color: #fff"></i>成绩查询</el-menu-item>
+          <el-menu-item index="1-3" @click.native="choosePath('/addstudent','学生录入')"><i class="el-icon-folder-opened" style="color: #fff"></i>学生录入</el-menu-item>
+          <el-menu-item index="1-4" @click.native="choosePath('/examManagement','试卷管理')"><i class="el-icon-suitcase" style="color: #fff"></i>试卷管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title"><i class="el-icon-s-tools"></i><span style="color: #fff">系统管理</span></template>
-        <el-menu-item-group>
-          <el-menu-item index="2-1"><i class="el-icon-s-custom" style="color: #fff"></i>学生信息</el-menu-item>
-        </el-menu-item-group>
       </el-submenu>
     </el-menu>
       </el-aside>
@@ -83,6 +82,8 @@ export default {
 
 <style lang="sass" >
 .layout
+  .el-submenu__title 
+    display: none
   .head_portrait
     margin: 50px 0px 35px
     .banner_img

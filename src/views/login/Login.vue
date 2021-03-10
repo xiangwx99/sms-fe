@@ -19,7 +19,7 @@
           <el-form-item label="">
             <el-row class="clear-fix">
               <div class="left">
-                <el-radio v-model="radio" label="stu">学生</el-radio>
+                <el-radio v-model="radio" label="stu" v-if="options !== '登录'">学生</el-radio>
                 <el-radio v-model="radio" label="tea">教师</el-radio>
               </div>
               <a class="right" @click="changeOption">{{options}}</a>
