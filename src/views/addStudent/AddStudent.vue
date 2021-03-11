@@ -7,7 +7,7 @@
 <script>
 import StudentTable from "./childComponents/StudentTable";
 export default {
-  name: "Course",
+  name: "AddStudent",
   components: {
     StudentTable,
   },
