@@ -156,8 +156,6 @@ export default {
 </script>
 
 <style lang="sass">
-.el-button--primary:focus
-  color: #409eff
 .download:hover
   cursor: pointer
 </style>

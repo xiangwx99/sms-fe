@@ -27,24 +27,14 @@
       </el-row>
       <el-col class="left flex select" :span="18">
         <el-select
-          v-model="filterOptions[0].value"
-          placeholder="请选择学生性别"
+          v-for="(item, index) in filterOptions"
+          :key="item.label"
+          v-model="filterOptions[index].value"
           multiple
+          :placeholder="item.placeholder"
         >
           <el-option
-            v-for="item in filterOptions[0].options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-        <el-select
-          v-model="filterOptions[1].value"
-          multiple
-          placeholder="请选择学生班级"
-        >
-          <el-option
-            v-for="item in filterOptions[1].options"
+            v-for="item in filterOptions[index].options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -100,7 +90,19 @@
         </el-table-column>
         <el-table-column prop="major" label="专业" align="center">
         </el-table-column>
+        <el-table-column prop="grade" label="年级" align="center">
+        </el-table-column>
         <el-table-column prop="class" label="班级" align="center">
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              @click="open(scope.raw)"
+            ></el-button>
+          </template>
         </el-table-column>
       </el-table>
       <pagination @changeShowStyle="changeShowStyle" />
@@ -126,14 +128,37 @@ export default {
       loading: false,
       filterOptions: [
         {
-          label: "性别",
+          placeholder: "请选择院系",
+          label: "院系",
           options: [
-            { value: "女", label: "女" },
-            { value: "男", label: "男" },
+            { value: "计算机科学学院", label: "计算机科学学院" },
+            { value: "经管院", label: "经管院" },
+          ],
+          value: [],
+        },
+
+        {
+          placeholder: "请选择专业",
+          label: "专业",
+          options: [
+            { value: "网络工程", label: "网络工程" },
+            { value: "大数据", label: "大数据" },
+            { value: "计科", label: "计科" },
           ],
           value: [],
         },
         {
+          placeholder: "请选择年级",
+          label: "年级",
+          options: [
+            { value: "2017级", label: "2017级" },
+            { value: "2018级", label: "2018级" },
+            { value: "2019级", label: "2019级" },
+          ],
+          value: [],
+        },
+        {
+          placeholder: "请选择班级",
           label: "班级",
           options: [
             { value: "一班", label: "一班" },
@@ -151,6 +176,7 @@ export default {
           name: "Kobe",
           department: "计算机科学学院",
           major: "网络工程",
+          grade: "2017级",
           class: "1班",
         },
       ],
@@ -162,8 +188,9 @@ export default {
       console.log(val);
     },
     clearFilter() {
-      this.filterOptions[1].value = [];
-      this.filterOptions[0].value = [];
+      this.filterOptions.forEach(
+        (item, index) => (this.filterOptions[index].value = [])
+      );
     },
     changeShowStyle(val) {
       this.showStyle = val;
@@ -171,14 +198,31 @@ export default {
     handleAddStu(val) {
       this.$refs.AddDialog.open(val);
     },
+    open() {
+      this.$confirm("确认删除该学生吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
   },
 };
 </script>
 
 <style lang="sass">
 .course-table
-  button:focus
-    background-color: transparent
   .el-select
     margin-right: 10px
   .el-select__tags

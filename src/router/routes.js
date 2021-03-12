@@ -20,11 +20,11 @@ const routes = [
         name: "Messages",
         component: () => import("views/messages/Messages"),
       },
-      {
-        path: "/examination",
-        name: "Course",
-        component: () => import("views/course/Course"),
-      },
+      // {
+      //   // path: "/examination",
+      //   // name: "Exam",
+      //   // component: () => import(""),
+      // },
       {
         path: "/grade",
         name: "Grade",
@@ -33,6 +33,10 @@ const routes = [
       {
         path: "/addStudent",
         component: () => import("views/addStudent/AddStudent"),
+      },
+      {
+        path: "/examManagement",
+        component: () => import("views/examManagement/ExamManagement"),
       },
     ],
   },
