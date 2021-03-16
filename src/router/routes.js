@@ -40,6 +40,10 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/add-exam",
+    component: () => import("views/addExam/AddExam"),
+  },
 ];
 
 export default routes;

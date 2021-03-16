@@ -1,7 +1,7 @@
 <template>
   <div style="padding-top: 16px" class="exam-table">
     <el-row>
-      <el-button type="primary" round>添加试卷</el-button>
+      <el-button type="primary" round @click="addExam">添加试卷</el-button>
       <el-select v-model="value" placeholder="请选择" style="margin-left: 20px">
         <el-option
           v-for="item in classOptions"
@@ -19,9 +19,7 @@
       </el-radio-group>
     </el-row>
     <el-divider />
-    <el-scrollbar
-      style="height: calc(100vh - 200px); display: flex; width: 100%"
-    >
+    <el-scrollbar class="exam-mannagement-scroll">
       <div>
         <ExamItem v-for="item in examList" :key="item.id" :examData="item" />
       </div>
@@ -64,8 +62,112 @@ export default {
           grade: "2017级",
           class: "1班",
         },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
+        {
+          id: "1212121",
+          examName: "英语期末测试",
+          bgImage:
+            "https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg",
+          name: "coderwhh",
+          grade: "2017级",
+          class: "1班",
+        },
       ],
     };
+  },
+  methods: {
+    addExam() {
+      this.$router.push("/add-exam");
+    },
   },
 };
 </script>
@@ -74,8 +176,13 @@ export default {
 .exam-table
   .el-divider
     margin: 16px 0
-  .el-scrollbar__wrap
+  .exam-mannagement-scroll
+    height: calc(100vh - 200px)
+    display: flex
     width: 100%
+    .el-scrollbar__wrap
+      width: 100%
+      overflow-x: hidden
   .el-scrollbar__view > div
     display: flex
     flex-wrap: wrap

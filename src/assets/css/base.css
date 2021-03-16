@@ -90,3 +90,7 @@ a {
   height: 32px;
   line-height: 32px;
 }
+
+html {
+  overflow-x: hidden;
+}

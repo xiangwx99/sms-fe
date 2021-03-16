@@ -10,25 +10,97 @@
         <el-tab-pane label="手动添加" name="tab-1">
           <el-row style="text-align: center; color: #8A8B99">
             <div style="margin: 10px 0 22px">
-              输入学生姓名、手机号即可添加学生
+              <span
+                class="el-icon-warning"
+                style="position: relative; top: 2px; right: 4px; color: #E6A23C"
+              ></span
+              ><span>密码默认为: 12345678</span>
             </div>
-            <el-col
-              :span="16"
-              style="margin-left: 50%; transform: translate(-50%, 0);"
+            <el-form
+              :model="stuInfo"
+              :rules="stuInfoRules"
+              ref="stuInfoForm"
+              label-width="100px"
+              class="demo-ruleForm"
             >
-              <el-form
-                label-position="right"
-                label-width="80px"
-                :model="stuInfo"
-              >
-                <el-form-item label="姓名">
+              <el-col :span="11">
+                <el-form-item label="姓名" prop="name">
                   <el-input v-model="stuInfo.name"></el-input>
                 </el-form-item>
-                <el-form-item label="手机">
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="学号/手机" prop="phoneNumber">
                   <el-input v-model="stuInfo.phoneNumber"></el-input>
                 </el-form-item>
-              </el-form>
-            </el-col>
+              </el-col>
+              <el-col :span="11">
+                <el-form-item label="专业" prop="major">
+                  <el-select v-model="stuInfo.major" placeholder="请选择">
+                    <el-option
+                      v-for="item in majorOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="院系" prop="department">
+                  <el-select v-model="stuInfo.department" placeholder="请选择">
+                    <el-option
+                      v-for="item in departmentOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="11">
+                <el-form-item label="年级" prop="major">
+                  <el-select v-model="stuInfo.grade" placeholder="请选择">
+                    <el-option
+                      v-for="item in gradeOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="班级" prop="class">
+                  <el-select v-model="stuInfo.class" placeholder="请选择">
+                    <el-option
+                      v-for="item in classOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="11">
+                <el-form-item label="性别" prop="gender">
+                  <el-select v-model="stuInfo.gender" placeholder="请选择">
+                    <el-option
+                      v-for="item in genderOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-form>
           </el-row>
         </el-tab-pane>
         <el-tab-pane label="批量导入" name="tab-2">
@@ -63,15 +135,62 @@
 <script>
 import XLSX from "xlsx";
 import { notifyError, notifySuccess } from "function/utils";
+
+const $_init = () => {
+  return {
+    name: "",
+    phoneNumber: "",
+    gender: "男",
+    major: "",
+    class: "",
+    department: "",
+    grade: "",
+  };
+};
 export default {
   name: "AddDialog",
   data() {
     return {
       tab: "tab-1",
       dialogVisible: false,
-      stuInfo: {
-        name: "",
-        phoneNumber: "",
+      departmentOptions: [
+        { label: "计科院", value: "计科院" },
+        { label: "经管院", value: "经管院" },
+      ],
+      majorOptions: [
+        { label: "网工", value: "网工" },
+        { label: "计科", value: "计科" },
+      ],
+      gradeOptions: [
+        { label: "2017级", value: "2017级" },
+        { label: "2018级", value: "2018级" },
+      ],
+      classOptions: [
+        { label: "1班", value: "1班" },
+        { label: "2班", value: "2班" },
+      ],
+      genderOptions: [
+        { label: "男", value: "男" },
+        { label: "女", value: "女" },
+      ],
+      stuInfo: $_init(),
+      stuInfoRules: {
+        name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        phoneNumber: [
+          { required: true, message: "请输入账号", trigger: "blur" },
+          {
+            min: 11,
+            max: 11,
+            message: "账号为11位",
+            trigger: "blur",
+          },
+        ],
+        department: [
+          { required: true, message: "请选择院系", trigger: "blur" },
+        ],
+        gender: [{ required: true, message: "请设置性别", trigger: "blur" }],
+        major: [{ required: true, message: "请选择专业", trigger: "blur" }],
+        class: [{ required: true, message: "请选择班级", trigger: "blur" }],
       },
       stuInfoArr: [],
     };
@@ -79,6 +198,7 @@ export default {
   methods: {
     handleClose(done) {},
     open(val) {
+      this.stuInfo = $_init();
       if (val === "complex") {
         this.tab = "tab-2";
       }
@@ -119,15 +239,16 @@ export default {
     },
     addStu() {
       if (this.tab === "tab-1") {
-        if (
-          this.stuInfo.name.trim().length < 0 ||
-          this.stuInfo.phoneNumber.trim().length !== 11
-        ) {
-          notifyError(this.$message, "请输入合适的手机号或者名字");
-        } else {
-          console.log(" ====> 发送网络请求" + this.stuInfo);
-        }
+        this.$refs["stuInfoForm"].validate((valid) => {
+          if (valid) {
+            alert("submit!");
+            this.dialogVisible = false;
+          } else {
+            return false;
+          }
+        });
       } else {
+        this.dialogVisible = false;
       }
     },
     formateStu(obj) {
@@ -147,6 +268,8 @@ export default {
           res["class"] = obj[key];
         } else if (key === "院系") {
           res["department"] = obj[key];
+        } else if (key === "年级") {
+          res["grade"] = obj[key];
         }
       });
       return res;

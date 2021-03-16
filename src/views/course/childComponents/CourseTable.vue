@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       courseName: null,
-      loading: true,
+      loading: false,
       filterOptions: [
         {
           label: "课程类型1",
