@@ -94,3 +94,7 @@ a {
 html {
   overflow-x: hidden;
 }
+
+li {
+  list-style: none;
+}

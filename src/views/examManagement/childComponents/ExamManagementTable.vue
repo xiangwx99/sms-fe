@@ -21,7 +21,11 @@
     <el-divider />
     <el-scrollbar class="exam-mannagement-scroll">
       <div>
-        <ExamItem v-for="item in examList" :key="item.id" :examData="item" />
+        <ExamItem
+          v-for="(item, index) in examList"
+          :key="index"
+          :examData="item"
+        />
       </div>
     </el-scrollbar>
   </div>

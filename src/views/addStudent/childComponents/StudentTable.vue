@@ -115,8 +115,10 @@
 import InputSearch from "components/inputSearch/InputSearch";
 import Pagination from "components/pagination/Pagination";
 import AddDialog from "./AddDialog";
+import nationOptions from "mixins/getNation";
 export default {
   name: "CourseTable",
+  mixins: [nationOptions],
   components: {
     InputSearch,
     Pagination,
@@ -128,32 +130,13 @@ export default {
       loading: false,
       filterOptions: [
         {
-          placeholder: "请选择院系",
-          label: "院系",
-          options: [
-            { value: "计算机科学学院", label: "计算机科学学院" },
-            { value: "经管院", label: "经管院" },
-          ],
-          value: [],
-        },
-
-        {
-          placeholder: "请选择专业",
-          label: "专业",
-          options: [
-            { value: "网络工程", label: "网络工程" },
-            { value: "大数据", label: "大数据" },
-            { value: "计科", label: "计科" },
-          ],
-          value: [],
-        },
-        {
           placeholder: "请选择年级",
           label: "年级",
           options: [
             { value: "2017级", label: "2017级" },
             { value: "2018级", label: "2018级" },
             { value: "2019级", label: "2019级" },
+            { value: "2020级", label: "2020级" },
           ],
           value: [],
         },
@@ -161,8 +144,10 @@ export default {
           placeholder: "请选择班级",
           label: "班级",
           options: [
-            { value: "一班", label: "一班" },
-            { value: "二班", label: "二班" },
+            { value: "1班", label: "1班" },
+            { value: "2班", label: "2班" },
+            { value: "3班", label: "3班" },
+            { value: "4班", label: "4班" },
           ],
           value: [],
         },

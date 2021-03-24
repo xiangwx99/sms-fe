@@ -5,12 +5,12 @@
       <div class="finished" @click="addExam()">完成</div>
     </div>
     <div class="content">
-      <el-row class="content-top content-shadow">
+      <el-card class="content-top">
         <el-input type="text" v-model="examName" @change="changeExamName" />
-      </el-row>
+      </el-card>
       <el-row class="clear-fix">
-        <div class="content-left content-shadow left"><ExamTitle /></div>
-        <div style="height: 1109px" class="content-right content-shadow right">
+        <el-card class="content-left left"><ExamTitle /></el-card>
+        <div style="height: 1109px" class="content-right right">
           <ExamContent />
         </div>
       </el-row>
@@ -45,6 +45,8 @@ export default {
 
 <style lang="sass">
 .add-exam
+  .el-card__body
+    padding: 0
   .header
     line-height: 40px
     text-align: center
@@ -55,7 +57,7 @@ export default {
       background-color: #409EFF
       cursor: pointer
   .content
-    width: 1100px
+    width: 1200px
     margin: 0 auto
   .content-shadow
     box-shadow: 0px 2px 10px 0px rgb(237 238 240 / 50%)

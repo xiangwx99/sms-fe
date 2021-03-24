@@ -1,0 +1,8 @@
+{
+  "subjectType": {
+    "s-choice-questions": "单选题",
+    "issue-questions": "判断题",
+    "completion": "填空题",
+    "short-answer-questions": "简答题"
+  }
+}

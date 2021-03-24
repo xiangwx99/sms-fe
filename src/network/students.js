@@ -1,23 +1,22 @@
-import request from './request'
+import request from "./request";
 
 export function loginStudent(phoneNumber, password) {
   return request({
-    url: '/login',
+    url: "/login",
     data: {
       phoneNumber,
-      password
+      password,
     },
-    method: 'post'
-  })
+    method: "post",
+  });
 }
 
-export function addStudent(phoneNumber, password) {
+export function addStudent(stuInfo) {
   return request({
-    url: '/addStudent',
+    url: "/addStudent",
     data: {
-      phoneNumber,
-      password
+      stuInfo,
     },
-    method: 'post'
-  })
+    method: "post",
+  });
 }

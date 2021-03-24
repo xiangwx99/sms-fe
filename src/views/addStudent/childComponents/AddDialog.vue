@@ -34,10 +34,14 @@
                 </el-form-item>
               </el-col>
               <el-col :span="11">
-                <el-form-item label="专业" prop="major">
-                  <el-select v-model="stuInfo.major" placeholder="请选择">
+                <el-form-item label="院系" prop="department">
+                  <el-select
+                    v-model="stuInfo.department"
+                    placeholder="请选择"
+                    @change="changeMajor"
+                  >
                     <el-option
-                      v-for="item in majorOptions"
+                      v-for="item in departmentOptions"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value"
@@ -47,10 +51,10 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="院系" prop="department">
-                  <el-select v-model="stuInfo.department" placeholder="请选择">
+                <el-form-item label="专业" prop="major">
+                  <el-select v-model="stuInfo.major" placeholder="请选择">
                     <el-option
-                      v-for="item in departmentOptions"
+                      v-for="item in majorOptions"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value"
@@ -74,8 +78,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="班级" prop="class">
-                  <el-select v-model="stuInfo.class" placeholder="请选择">
+                <el-form-item label="班级" prop="classes">
+                  <el-select v-model="stuInfo.classes" placeholder="请选择">
                     <el-option
                       v-for="item in classOptions"
                       :key="item.value"
@@ -134,7 +138,11 @@
 
 <script>
 import XLSX from "xlsx";
+import md5 from "blueimp-md5";
+import request from "network/request.js";
 import { notifyError, notifySuccess } from "function/utils";
+import dataOptions from "mixins/getNation";
+import { addStudent } from "network/students";
 
 const $_init = () => {
   return {
@@ -142,32 +150,30 @@ const $_init = () => {
     phoneNumber: "",
     gender: "男",
     major: "",
-    class: "",
+    classes: "",
     department: "",
     grade: "",
   };
 };
 export default {
   name: "AddDialog",
+  mixins: [dataOptions],
   data() {
     return {
       tab: "tab-1",
       dialogVisible: false,
-      departmentOptions: [
-        { label: "计科院", value: "计科院" },
-        { label: "经管院", value: "经管院" },
-      ],
-      majorOptions: [
-        { label: "网工", value: "网工" },
-        { label: "计科", value: "计科" },
-      ],
+      majorOptions: [],
       gradeOptions: [
-        { label: "2017级", value: "2017级" },
-        { label: "2018级", value: "2018级" },
+        { value: "2017级", label: "2017级" },
+        { value: "2018级", label: "2018级" },
+        { value: "2019级", label: "2019级" },
+        { value: "2020级", label: "2020级" },
       ],
       classOptions: [
         { label: "1班", value: "1班" },
         { label: "2班", value: "2班" },
+        { label: "3班", value: "3班" },
+        { label: "4班", value: "4班" },
       ],
       genderOptions: [
         { label: "男", value: "男" },
@@ -190,12 +196,22 @@ export default {
         ],
         gender: [{ required: true, message: "请设置性别", trigger: "blur" }],
         major: [{ required: true, message: "请选择专业", trigger: "blur" }],
-        class: [{ required: true, message: "请选择班级", trigger: "blur" }],
+        classes: [{ required: true, message: "请选择班级", trigger: "blur" }],
       },
       stuInfoArr: [],
     };
   },
   methods: {
+    changeMajor() {
+      if (this.stuInfo.department) {
+        this.stuInfo.major = "";
+        this.departmentOptions.forEach((item, index) => {
+          if (item.value === this.stuInfo.department) {
+            this.majorOptions = this.departmentOptions[index].majorOptions;
+          }
+        });
+      }
+    },
     handleClose(done) {},
     open(val) {
       this.stuInfo = $_init();
@@ -205,7 +221,11 @@ export default {
       this.dialogVisible = true;
     },
     downloadTemplate() {
-      console.log("===> 下载模板");
+      request({
+        url: "/downTemplate",
+      }).then((res) => {
+        window.open(res.fileUrl);
+      });
     },
     uploadStu() {
       this.$refs.input.click();
@@ -230,7 +250,6 @@ export default {
           ws.forEach((obj, index) => {
             this.stuInfoArr[index] = this.formateStu(obj);
           });
-          console.log(this.stuInfoArr);
         } catch (e) {
           return false;
         }
@@ -241,18 +260,33 @@ export default {
       if (this.tab === "tab-1") {
         this.$refs["stuInfoForm"].validate((valid) => {
           if (valid) {
-            alert("submit!");
-            this.dialogVisible = false;
+            this.stuInfo.password = md5(md5(12345678));
+            addStudent([this.stuInfo]).then((res) => {
+              if (res.success) {
+                notifySuccess(this.$message, "添加成功");
+              } else {
+                notifyError(this.$message, res.message);
+              }
+              this.dialogVisible = false;
+            });
           } else {
             return false;
           }
         });
       } else {
-        this.dialogVisible = false;
+        addStudent(this.stuInfoArr).then((res) => {
+          if (res.success) {
+            notifySuccess(this.$message, res.message);
+          } else {
+            notifyError(this.$message, res.message);
+          }
+          this.dialogVisible = false;
+        });
       }
     },
     formateStu(obj) {
       let res = {};
+      res.password = md5(md5(12345678));
       Object.keys(obj).forEach((key) => {
         if (key === "专业") {
           res["major"] = obj[key];
@@ -260,12 +294,10 @@ export default {
           res["name"] = obj[key];
         } else if (key === "学号") {
           res["phoneNumber"] = obj[key];
-        } else if (key === "密码") {
-          res["password"] = obj[key];
         } else if (key === "性别") {
           res["gender"] = obj[key];
         } else if (key === "班级") {
-          res["class"] = obj[key];
+          res["classes"] = obj[key];
         } else if (key === "院系") {
           res["department"] = obj[key];
         } else if (key === "年级") {
