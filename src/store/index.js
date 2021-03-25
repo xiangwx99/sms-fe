@@ -1,13 +1,11 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import student from './student'
-import teacher from './teacher'
+import Vue from "vue";
+import Vuex from "vuex";
+import userInfo from "./userInfo";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    student,
-    teacher
-  }
-})
+    userInfo,
+  },
+});

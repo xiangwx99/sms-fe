@@ -32,6 +32,7 @@
           v-model="filterOptions[index].value"
           multiple
           :placeholder="item.placeholder"
+          @change="$_request"
         >
           <el-option
             v-for="item in filterOptions[index].options"
@@ -82,8 +83,6 @@
         </el-table-column>
         <el-table-column prop="phoneNumber" label="学号/账号" align="center">
         </el-table-column>
-        <el-table-column prop="password" label="密码" align="center">
-        </el-table-column>
         <el-table-column prop="gender" label="性别" align="center">
         </el-table-column>
         <el-table-column prop="department" label="院系" align="center">
@@ -92,20 +91,25 @@
         </el-table-column>
         <el-table-column prop="grade" label="年级" align="center">
         </el-table-column>
-        <el-table-column prop="class" label="班级" align="center">
+        <el-table-column prop="classes" label="班级" align="center">
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
+              style="padding: 6px"
               type="danger"
               icon="el-icon-delete"
               circle
-              @click="open(scope.raw)"
+              @click="open(scope.row)"
             ></el-button>
           </template>
         </el-table-column>
       </el-table>
-      <pagination @changeShowStyle="changeShowStyle" />
+      <pagination
+        @changeShowStyle="changeShowStyle"
+        @refetch="refetch"
+        :total="total"
+      />
     </el-scrollbar>
     <AddDialog ref="AddDialog" />
   </div>
@@ -116,6 +120,7 @@ import InputSearch from "components/inputSearch/InputSearch";
 import Pagination from "components/pagination/Pagination";
 import AddDialog from "./AddDialog";
 import nationOptions from "mixins/getNation";
+import { queryStudent, deleteStudent } from "network/students";
 export default {
   name: "CourseTable",
   mixins: [nationOptions],
@@ -126,6 +131,9 @@ export default {
   },
   data() {
     return {
+      page: 1,
+      size: 10,
+      total: 10,
       courseName: null,
       loading: false,
       filterOptions: [
@@ -153,109 +161,35 @@ export default {
         },
       ],
       showStyle: true,
-      tableData: [
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-        {
-          phoneNumber: "13281880960",
-          password: "12345678",
-          gender: "男",
-          name: "Kobe",
-          department: "计算机科学学院",
-          major: "网络工程",
-          grade: "2017级",
-          class: "1班",
-        },
-      ],
+      tableData: [],
     };
   },
   methods: {
+    refetch(val) {
+      let { page, size } = val;
+      this.page = page;
+      this.size = size;
+      this.$_request();
+    },
+    async $_request() {
+      let queryArgs = {};
+      queryArgs.page = this.page;
+      queryArgs.size = this.size;
+      queryArgs.grade = this.filterOptions[0].value;
+      queryArgs.classes = this.filterOptions[1].value;
+      queryArgs.phoneNumber = this.courseName;
+      let { data, total } = await queryStudent(queryArgs);
+      this.tableData = data;
+      this.total = total;
+    },
     searchByCourseName(val) {
-      console.log(this.courseName === val);
-      console.log(val);
+      this.$_request();
     },
     clearFilter() {
       this.filterOptions.forEach(
         (item, index) => (this.filterOptions[index].value = [])
       );
+      this.$_request();
     },
     changeShowStyle(val) {
       this.showStyle = val;
@@ -263,25 +197,31 @@ export default {
     handleAddStu(val) {
       this.$refs.AddDialog.open(val);
     },
-    open() {
+    async open(row) {
       this.$confirm("确认删除该学生吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-      })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
+      }).then(() => {
+        deleteStudent(row._id).then((res) => {
+          if (res.success) {
+            this.$_request();
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          } else {
+            this.$message({
+              type: "error",
+              message: "删除失败",
+            });
+          }
         });
+      });
     },
+  },
+  async mounted() {
+    await this.$_request();
   },
 };
 </script>

@@ -1,23 +1,33 @@
-import request from './request'
+import request from "./request";
 
 export function loginTeacher(phoneNumber, password) {
   return request({
-    url: '/loginTea',
+    url: "/loginTea",
     data: {
       phoneNumber,
-      password
+      password,
     },
-    method: 'post'
-  })
+    method: "post",
+  });
 }
 
 export function addTeacher(phoneNumber, password) {
   return request({
-    url: '/addTeacher',
+    url: "/addTeacher",
     data: {
       phoneNumber,
-      password
+      password,
     },
-    method: 'post'
-  })
+    method: "post",
+  });
+}
+
+export function queryTeacherById(_id) {
+  return request({
+    url: "/queryTeacherById",
+    data: {
+      _id,
+    },
+    method: "post",
+  });
 }
