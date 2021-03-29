@@ -12,23 +12,16 @@
           </div>
         </el-row>
         <el-row class="right flex">
-          <span
-            style="font-weight: 700; margin-right: 35px; margin-top: 3px; color: #19AAF8"
-            >吴彦祖</span
-          >
           <el-button
             class="el-iconmessage icon message"
             @click="choosePath('/messages', '查看消息')"
           ></el-button>
           <el-dropdown class="right">
-            <div
-              style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden; backgroundColor: pink; cursor: pointer"
-            >
-              <img
-                src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3163479695,2609507199&fm=26&gp=0.jpg"
-                alt=""
-                style="width: 32px; height: 32px;"
-              />
+            <div style="cursor: pointer">
+              <span
+                style="font-weight: 700; margin-right: 35px; margin-top: 3px; color: #19AAF8"
+                >{{ name ? name : phoneNumber }}</span
+              >
             </div>
             <el-dropdown-menu>
               <el-dropdown-item
@@ -119,10 +112,16 @@ export default {
   name: "Layout",
   mounted() {
     this.status = localStorage.getLocalStorage("status");
+    this.name = JSON.parse(localStorage.getLocalStorage("userInfo")).name;
+    this.phoneNumber = JSON.parse(
+      localStorage.getLocalStorage("userInfo")
+    ).phoneNumber;
   },
   data() {
     return {
       status: "tea",
+      name: "",
+      phoneNumber: "",
       curOption: null,
       bannerUrl: require("../assets/img/swpu_logo.jpg"),
     };

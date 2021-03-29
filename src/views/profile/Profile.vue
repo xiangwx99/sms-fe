@@ -208,7 +208,7 @@ export default {
         this.studentInfo[key] = data[key];
       }
     });
-    this.imgUrl = this.studentInfo.avatar.split("img/")[1]
+    this.imgUrl = this.studentInfo.avatar
       ? this.studentInfo.avatar.split("img/")[1]
       : this.imgUrl;
   },

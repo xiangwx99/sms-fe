@@ -155,6 +155,14 @@ export default {
               "userInfo",
               JSON.stringify(ret.userInfo)
             );
+            this.$store.commit("userInfo/updateId", ret.userInfo._id);
+            this.$store.commit("userInfo/updateStatus", this.radio);
+            this.$store.commit(
+              "userInfo/updatePhoneNumber",
+              ret.userInfo.phoneNumber
+            );
+            this.$store.commit("userInfo/updateName", ret.userInfo.name);
+
             this.$router.push("/");
           } else if (ret.err_code === 3) {
             notifyError(this.$message, "账号或者密码错误!");
