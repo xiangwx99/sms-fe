@@ -74,7 +74,7 @@ export default {
   .content-left
     width: 25%
     margin-right: 20px
-    height: 1269px
+    min-height: 1269px
     padding: 12px 0 0 16px
   .content-right
     width: 73%
