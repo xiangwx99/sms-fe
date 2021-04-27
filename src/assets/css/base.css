@@ -98,3 +98,7 @@ html {
 li {
   list-style: none;
 }
+
+.el-tabs__nav {
+  line-height: 48px;
+}

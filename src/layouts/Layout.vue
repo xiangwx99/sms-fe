@@ -87,6 +87,12 @@
                 ><i class="el-icon-suitcase" style="color: #fff"></i
                 >试卷管理</el-menu-item
               >
+              <el-menu-item
+                index="1-5"
+                @click.native="choosePath('/messages', '消息通知')"
+                ><i class="el-icon-chat-dot-square" style="color: #fff"></i
+                >消息通知</el-menu-item
+              >
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="2">
@@ -112,10 +118,10 @@ export default {
   name: "Layout",
   mounted() {
     this.status = localStorage.getLocalStorage("status");
-    this.name = JSON.parse(localStorage.getLocalStorage("userInfo")).name;
+    this.name = JSON.parse(localStorage.getLocalStorage("userInfo"))?.name;
     this.phoneNumber = JSON.parse(
       localStorage.getLocalStorage("userInfo")
-    ).phoneNumber;
+    )?.phoneNumber;
   },
   data() {
     return {
@@ -202,5 +208,5 @@ export default {
   .el-card__body
     padding-top: 0
   .el-main
-    padding: 16px</style
->>
+    padding: 16px
+</style>

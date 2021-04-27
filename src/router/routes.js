@@ -20,11 +20,11 @@ const routes = [
         name: "Messages",
         component: () => import("views/messages/Messages"),
       },
-      // {
-      //   // path: "/examination",
-      //   // name: "Exam",
-      //   // component: () => import(""),
-      // },
+      {
+        path: "/examination",
+        name: "Exam",
+        component: () => import("views/examination/index.vue"),
+      },
       {
         path: "/grade",
         name: "Grade",
@@ -43,6 +43,10 @@ const routes = [
   {
     path: "/add-exam",
     component: () => import("views/addExam/AddExam"),
+  },
+  {
+    path: "/test",
+    component: () => import("views/test/index"),
   },
 ];
 

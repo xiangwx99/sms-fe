@@ -20,9 +20,11 @@
     <div
       style="lineHeight: 22px; fontSize: 12px; padding-left: 12px; color: #666"
     >
-      <p style="fontSize: 18px; color: #000">{{ examData.examName }}</p>
-      <p>{{ examData.name }}</p>
-      <p>{{ examData.grade + " " + examData.class }}</p>
+      <p style="fontSize: 18px; color: #000; line-height: 48px">
+        {{ examData.examName }}
+      </p>
+      <!-- <p>{{ examData.name }}</p> -->
+      <!-- <p>{{ examData.grade + " " + examData.class }}</p> -->
     </div>
   </div>
 </template>
