@@ -75,17 +75,19 @@
                 ><i class="el-icon-document" style="color: #fff"></i
                 >成绩查询</el-menu-item
               >
-              <el-menu-item
-                index="1-3"
-                @click.native="choosePath('/addstudent', '学生录入')"
-                ><i class="el-icon-folder-opened" style="color: #fff"></i
-                >学生录入</el-menu-item
-              >
+
               <el-menu-item
                 index="1-4"
                 @click.native="choosePath('/examManagement', '试卷管理')"
                 ><i class="el-icon-suitcase" style="color: #fff"></i
                 >试卷管理</el-menu-item
+              >
+              <el-menu-item
+                v-if="this.status === 'tea'"
+                index="1-3"
+                @click.native="choosePath('/addstudent', '学生录入')"
+                ><i class="el-icon-folder-opened" style="color: #fff"></i
+                >学生录入</el-menu-item
               >
               <el-menu-item
                 index="1-5"

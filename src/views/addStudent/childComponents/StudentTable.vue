@@ -78,7 +78,9 @@
       >
         <el-table-column label="名字" align="center">
           <template slot-scope="scope">
-            <el-button type="text">{{ scope.row.name }}</el-button>
+            <el-button type="text" @click="toPersonInfo(scope.row)">{{
+              scope.row.name
+            }}</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="phoneNumber" label="学号/账号" align="center">
@@ -217,6 +219,12 @@ export default {
             });
           }
         });
+      });
+    },
+    toPersonInfo(val) {
+      this.$router.push({
+        path: "/profile",
+        query: { id: val._id },
       });
     },
   },

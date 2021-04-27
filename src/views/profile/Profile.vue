@@ -202,6 +202,9 @@ export default {
   },
   async mounted() {
     let { _id } = JSON.parse(localStorage.getLocalStorage("userInfo"));
+    if (localStorage.getLocalStorage("status") === "tea") {
+      _id = this.$route.query.id;
+    }
     let { data } = await queryStudentById(_id);
     Object.keys(this.studentInfo).forEach((key) => {
       if (data.hasOwnProperty(key)) {
