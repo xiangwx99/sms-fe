@@ -469,7 +469,6 @@ export default {
       }
       this.subjectContent[type][obj.number - 1] = obj;
       console.log(this.subjectContent);
-      window.aaa = this.subjectContent;
       this.$EventBus.$emit("addSubjects", this.subjectContent);
     },
     // 点击题目展示题目详情

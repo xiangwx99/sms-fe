@@ -102,3 +102,23 @@ li {
 .el-tabs__nav {
   line-height: 48px;
 }
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.space-around {
+  justify-content: space-around;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.text-ellipsis {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
