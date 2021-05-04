@@ -26,7 +26,7 @@
             >
               <div
                 class="flex space-between pro_list_item"
-                @click.stop="editQuestion(index, item)"
+                @click.stop="lookQuestion(index, item)"
               >
                 <span>{{ index + 1 }}</span>
                 <span class="text-ellipsis" style="width: 190px">{{
@@ -51,7 +51,10 @@
               v-for="(item, index) in exam.issueQuestion"
               :key="item.question + index"
             >
-              <div class="flex space-between pro_list_item">
+              <div
+                class="flex space-between pro_list_item"
+                @click.stop="lookQuestion(index, item)"
+              >
                 <span>{{ index + 1 }}</span>
                 <span class="text-ellipsis" style="width: 190px">{{
                   item.question
@@ -75,7 +78,10 @@
               v-for="(item, index) in exam.completionQuestion"
               :key="item.question + index"
             >
-              <div class="flex space-between pro_list_item">
+              <div
+                class="flex space-between pro_list_item"
+                @click.stop="lookQuestion(index, item)"
+              >
                 <span>{{ index + 1 }}</span>
                 <span class="text-ellipsis" style="width: 190px">{{
                   item.question
@@ -99,7 +105,10 @@
               v-for="(item, index) in exam.shortAnswerQuestions"
               :key="item.question + index"
             >
-              <div class="flex space-between pro_list_item">
+              <div
+                class="flex space-between pro_list_item"
+                @click.stop="lookQuestion(index, item)"
+              >
                 <span>{{ index + 1 }}</span>
                 <span class="text-ellipsis" style="width: 190px">{{
                   item.question
@@ -129,7 +138,7 @@
             </div>
           </el-card>
 
-          <el-card style="height: 1007px; margin-top: 24px">
+          <el-card style="min-height: 1007px; margin-top: 24px">
             <div
               style="line-height: 48px; text-align: center; color: #A8A8B3;"
               v-if="showDefault"
@@ -213,6 +222,7 @@
                     >{{ exam.issueQuestion.length + 1 }}.</span
                   >
                   <span style="margin-right:16px">判断题</span>
+
                   <el-input-number
                     v-model="issueQuestion.score"
                     :min="1"
@@ -237,7 +247,7 @@
                     <el-row class="choose_list clear-fix">
                       <el-col :span="1" style="margin-left: 10px">
                         <el-radio
-                          v-model="choiceQuestion.answer"
+                          v-model="issueQuestion.answer"
                           :label="item.label"
                         >
                           {{ item.label }}
@@ -382,18 +392,164 @@
               </div>
             </div>
             <!-- 预览部分 -->
-            <div v-else>
+            <div v-else style="padding: 20px" class="pre_text_color">
               <div v-show="showQuestionType === '单选题'">
-                单选题1
+                <el-row
+                  style="lineHeight: 32px; margin-bottom: 16px"
+                  class="score"
+                >
+                  <span
+                    style="margin-right:16px; font-weight: bold; color: #181E33"
+                    >{{ showChoice.index + 1 }}.</span
+                  >
+                  <span style="margin-right:16px"
+                    >({{ showChoice.type + "，" + showChoice.score }}分)</span
+                  >
+                  <span>{{ showChoice.question }}</span>
+                </el-row>
+                <el-row style="margin-top: 16px; ">
+                  <el-row
+                    v-for="(item, index) in showChoice.options"
+                    :key="item.label + index"
+                    style="margin-bottom: 16px"
+                  >
+                    <!-- {{ item }} -->
+                    <el-row class="choose_list clear-fix">
+                      <el-col :span="1" style="margin-left: 10px">
+                        <el-radio
+                          v-model="showChoice.answer"
+                          :label="item.label"
+                          :disabled="true"
+                        >
+                          {{ item.label }}
+                        </el-radio>
+                      </el-col>
+                      <el-col
+                        :span="22"
+                        style="float: right; line-height: 38px"
+                        >{{ item.value }}</el-col
+                      >
+                    </el-row>
+                  </el-row>
+                  <el-row class="clear-fix" style="line-height: 32px">
+                    <el-col :span="2" style="text-align: center">答案: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      showChoice.answer
+                    }}</el-col>
+                    <el-col :span="2" style="text-align: center">解析: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      showChoice.answerdDetail
+                    }}</el-col>
+                  </el-row>
+                </el-row>
               </div>
               <div v-show="showQuestionType === '判断题'">
-                判断题1
+                <el-row
+                  style="lineHeight: 32px; margin-bottom: 16px"
+                  class="score"
+                >
+                  <span
+                    style="margin-right:16px; font-weight: bold; color: #181E33"
+                    >{{ showIssue.index + 1 }}.</span
+                  >
+                  <span style="margin-right:16px"
+                    >({{ showIssue.type + "，" + showIssue.score }}分)</span
+                  >
+                  <span>{{ showIssue.question }}</span>
+                </el-row>
+                <el-row style="margin-top: 16px; ">
+                  <el-row
+                    v-for="(item, index) in showIssue.options"
+                    :key="item.label + index"
+                    style="margin-bottom: 16px"
+                  >
+                    <!-- {{ item }} -->
+                    <el-row class="choose_list clear-fix">
+                      <el-col :span="1" style="margin-left: 10px">
+                        <el-radio
+                          v-model="showIssue.answer"
+                          :label="item.label"
+                          :disabled="true"
+                        >
+                          {{ item.label }}
+                        </el-radio>
+                      </el-col>
+                      <el-col
+                        :span="22"
+                        style="float: right; line-height: 38px"
+                        >{{ item.value }}</el-col
+                      >
+                    </el-row>
+                  </el-row>
+                  <el-row class="clear-fix" style="line-height: 32px">
+                    <el-col :span="2" style="text-align: center">答案: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      showIssue.answer
+                    }}</el-col>
+                    <el-col :span="2" style="text-align: center">解析: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      showIssue.answerdDetail
+                    }}</el-col>
+                  </el-row>
+                </el-row>
               </div>
               <div v-show="showQuestionType === '填空题'">
-                填空题1
+                <el-row
+                  style="lineHeight: 32px; margin-bottom: 16px"
+                  class="score"
+                >
+                  <span
+                    style="margin-right:16px; font-weight: bold; color: #181E33"
+                    >{{ showCompletion.index + 1 }}.</span
+                  >
+                  <span style="margin-right:16px"
+                    >({{
+                      showCompletion.type + "，" + showCompletion.score
+                    }}分)</span
+                  >
+                  <span>{{ showCompletion.question }}</span>
+                </el-row>
+                <el-row style="margin-top: 16px; ">
+                  <el-row class="clear-fix" style="line-height: 32px">
+                    <el-col :span="2" style="text-align: center">答案: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      showCompletion.answer.split("&$&").join("  ")
+                    }}</el-col>
+                    <el-col :span="2" style="text-align: center">解析: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      showCompletion.answerdDetail
+                    }}</el-col>
+                  </el-row>
+                </el-row>
               </div>
               <div v-show="showQuestionType === '简答题'">
-                简答题1
+                <el-row
+                  style="lineHeight: 32px; margin-bottom: 16px"
+                  class="score"
+                >
+                  <span
+                    style="margin-right:16px; font-weight: bold; color: #181E33"
+                    >{{ showChortAnswer.index + 1 }}.</span
+                  >
+                  <span style="margin-right:16px"
+                    >({{
+                      showChortAnswer.type + "，" + showChortAnswer.score
+                    }}分)</span
+                  >
+                  <span>{{ showChortAnswer.question }}</span>
+                </el-row>
+                <el-row style="margin-top: 16px; ">
+                  <el-row class="clear-fix" style="line-height: 32px">
+                    <el-col :span="2" style="text-align: center">答案: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      showChortAnswer.answer
+                    }}</el-col>
+                    <el-col :span="2" style="text-align: center">解析: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      showChortAnswer.answerdDetail
+                    }}</el-col>
+                  </el-row>
+                </el-row>
               </div>
             </div>
           </el-card>
@@ -408,7 +564,7 @@ import { mavonEditor } from "mavon-editor";
 import { deepClone } from "function/utils";
 import "mavon-editor/dist/css/index.css";
 const $initChoiceQuestion = () => ({
-  type: "选择题",
+  type: "单选题",
   score: "",
   question: "",
   questionHtml: "",
@@ -542,6 +698,11 @@ export default {
         completionQuestion: [],
         shortAnswerQuestions: [],
       },
+      // 预览题目
+      showChoice: null,
+      showIssue: null,
+      showCompletion: null,
+      showChortAnswer: null,
     };
   },
   computed: {
@@ -589,6 +750,7 @@ export default {
     // 添加考试题目
     addQuestion(type) {
       this.showDefault = false;
+      this.previewQuestion = false;
       this.showQuestionType = type;
     },
     // 重置题目内容
@@ -602,8 +764,18 @@ export default {
       // 简答题
       this.shortAnswerQuestions = $initShortAnswerQuestions();
     },
-    // 编辑问题
-    editQuestion(index, obj) {},
+    // 预览问题
+    lookQuestion(index, obj) {
+      console.log(obj);
+      this.previewQuestion = true;
+      this.showDefault = false;
+      this.showQuestionType = obj.type;
+      obj.index = index;
+      this.showChoice = obj;
+      this.showIssue = obj;
+      this.showCompletion = obj;
+      this.showChortAnswer = obj;
+    },
     // 删除问题
     deleteQuestion(index) {
       this.$confirm("确认删除此题吗？", "提示", {
@@ -795,4 +967,7 @@ export default {
 
         display: inline-block
         font-size: 14px
+  .pre_text_color
+    color: #A8A8B3
+    font-size: 13px
 </style>
