@@ -16,7 +16,7 @@
       style="width: 1100px; margin: 0 auto; height: calc(100vh - 40px)"
     >
       <div class="head_top clear-fix">
-        <div class="left" style="padding: 20px 0 0 40px; color: #181E33;">
+        <div class="left" style="padding: 20px 0 0 30px; color: #181E33;">
           <h2>{{ exam.examName }}</h2>
           <div style="line-height: 32px; font-size: 14px; color: #A8A8B3;">
             题量：{{ countNum }} 总分：{{ countTest }}
@@ -300,15 +300,19 @@
 </template>
 
 <script>
+import { queryExamById } from "../../network/exam";
 export default {
   name: "Test",
-  mounted() {
+  async mounted() {
     let time = new Date().getTime() + 1000 * this.exam.lengthOfExamination * 60;
     this.curStartTime = new Date(time);
     this.countTime();
+    this.id = this.$route.query._id;
+    await this.queryExamById(this.id);
   },
   data() {
     return {
+      id: null,
       activeType: "单选题",
       activeIndex: 0,
       // 倒计时相关
@@ -506,6 +510,11 @@ export default {
     };
   },
   methods: {
+    // 试卷数据
+    async queryExamById(id) {
+      let res = await queryExamById(id);
+      this.exam = res.data.content;
+    },
     // 倒计时
     countTime() {
       // 获取当前时间

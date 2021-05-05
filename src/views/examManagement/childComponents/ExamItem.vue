@@ -1,35 +1,39 @@
 <template>
-  <div class="wrap">
-    <div>
-      <a
-        href="javascript:;"
-        style="border-radius: 8px 8px 0 0; display: inline-block; overflow: hidden; position: relative"
-      >
-        <img
-          :src="`${examData.bgImage ? examData.bgImage : defaultImgUrl}`"
-          alt=""
-          style="width: 100%; height: 170px"
-        />
-
-        <span
-          class="el-icon-circle-close close"
-          @click="handleDelete(examData.id)"
-        ></span>
-      </a>
-    </div>
-    <div
-      style="lineHeight: 22px; fontSize: 12px; padding-left: 12px; color: #666"
-    >
-      <p style="fontSize: 18px; color: #000; line-height: 48px">
-        {{ examData.examName }}
-      </p>
-      <!-- <p>{{ examData.name }}</p> -->
-      <!-- <p>{{ examData.grade + " " + examData.class }}</p> -->
+  <div class="wrap left" style="margin-right: 32px">
+    <div class="exam-item">
+      <div class="top-wrap">
+        <div class="content"></div>
+      </div>
+      <div style="line-height: 40px; position: relative">
+        <span class="text-ellipsis" style="width: 200px; font-size: 14px">{{
+          examData.content.examName
+        }}</span>
+        <div
+          class="more"
+          style="position: absolute; right: 0; width: 40px; height: 40px; top: 0"
+        >
+          <el-dropdown>
+            <span class="el-dropdown-link" style="position: relative; top: 2px">
+              <i class="el-icon-more"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                icon="el-icon-delete"
+                @click.native="handleDelete(examData._id)"
+                >删除</el-dropdown-item
+              >
+              <el-dropdown-item icon="el-icon-share">指派</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { deleteExam } from "../../../network/exam";
+import { notifyError, notifySuccess } from "function/utils";
 export default {
   name: "ExamIte",
   props: {
@@ -46,49 +50,69 @@ export default {
     };
   },
   methods: {
-    handleDelete(id) {
+    async handleDelete(id) {
       this.$confirm("此操作将永久删除该试卷, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-      })
-        .then(() => {
-          console.log(id + "===> 删除试卷接口");
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
+      }).then(async () => {
+        let res = await deleteExam(id);
+        if (res.success) {
+          notifySuccess(this.$message, "删除成功");
+          this.$emit("reftch");
+        } else {
+          notifyError(this.$message, "服务端错误");
+        }
+      });
     },
   },
 };
 </script>
 
 <style scoped>
-.wrap {
-  width: 21%;
-  background-color: #f3f3f3;
-  margin-bottom: 16px;
-  border-radius: 8px;
+.exam-item {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin-top: 28px;
 }
-.close {
-  color: white;
+.top-wrap {
+  position: relative;
+  width: 240px;
+  height: 180px;
+  background-color: #dcedff;
+  border-radius: 16px;
+  border-top-left-radius: 0;
+}
+.top-wrap:before {
+  content: "";
   position: absolute;
-  right: 4px;
-  top: 4px;
+  top: -20px;
+  left: 0;
+  width: 50%;
+  height: 0px;
+  border-bottom: 20px solid #c0ddff;
+  border-left: 20px solid #c0ddff;
+  border-right: 20px solid transparent;
+  border-top-left-radius: 16px;
+}
+.content {
+  opacity: 0.8;
+  width: 210px;
+  height: 140px;
+  border-radius: 12px;
+  position: absolute;
+  top: 20px;
+  left: 15px;
+  background: url("../../../assets/img/exam-bgc.jpeg");
+}
+.el-icon-more:before {
+  font-size: 14px;
+}
+.more {
   display: none;
 }
-.wrap:hover {
-  box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.5s ease-in-out;
-}
-.wrap:hover .close {
+.exam-item:hover .more {
   display: inline-block;
 }
 </style>

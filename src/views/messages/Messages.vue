@@ -1,5 +1,5 @@
 <template>
-  <div style="padding-top: 40px">
+  <div style="padding-top: 20px">
     <message-table showTab="tab-1" />
   </div>
 </template>
