@@ -1,6 +1,15 @@
 <template>
   <div class="test">
-    <div class="nav_top">考试</div>
+    <div class="clear-fix">
+      <div class="nav_top left">考试</div>
+      <div
+        class="right"
+        style="width: 10%; line-height: 40px; text-align: center; background: #409EFF; cursor: pointer; color: #fff"
+        @click="finishTest"
+      >
+        交卷
+      </div>
+    </div>
     <!-- <div class="title">期末考试-计算机网络</div> -->
     <div
       class="wrap"
@@ -10,7 +19,7 @@
         <div class="left" style="padding: 20px 0 0 40px; color: #181E33;">
           <h2>{{ exam.examName }}</h2>
           <div style="line-height: 32px; font-size: 14px; color: #A8A8B3;">
-            题量：{{ 1 }} 总分：{{ 2 }}
+            题量：{{ countNum }} 总分：{{ countTest }}
           </div>
         </div>
         <div class="right">
@@ -89,7 +98,7 @@
                   style="color: #181E33; font-weight: 500; margin-bottom: 30px"
                   v-show="exam.issueQuestion.length > 0"
                   >判断题（共{{ exam.issueQuestion.length }}题，{{
-                    countChoice
+                    countIssue
                   }}分）</el-row
                 >
                 <div>
@@ -142,7 +151,7 @@
                   style="color: #181E33; font-weight: 500; margin-bottom: 30px"
                   v-show="exam.completionQuestion.length > 0"
                   >填空题（共{{ exam.completionQuestion.length }}题，{{
-                    countIssue
+                    countCompletion
                   }}分）</el-row
                 >
                 <div>
@@ -163,6 +172,52 @@
                     }}</span>
                   </div>
                 </div>
+                <el-col style="margin-top: 16px">
+                  <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 4, maxRows: 4 }"
+                    placeholder="请输入内容，多个空格使用‘&$&’分割开来"
+                    v-model="exam.completionQuestion[activeIndex].replyAnswer"
+                  >
+                  </el-input>
+                </el-col>
+              </el-row>
+              <!-- 简答题 -->
+              <el-row v-if="activeType === '简答题'">
+                <el-row
+                  style="color: #181E33; font-weight: 500; margin-bottom: 30px"
+                  v-show="exam.shortAnswerQuestions.length > 0"
+                  >简答题（共{{ exam.shortAnswerQuestions.length }}题，{{
+                    countShortAnswer
+                  }}分）</el-row
+                >
+                <div>
+                  <div
+                    style="color: #181E33; font-size: 14px; line-height: 20px"
+                  >
+                    <span>{{ activeIndex + 1 }}.</span>
+                    <span style="color: #A8A8B3;"
+                      >({{
+                        exam.shortAnswerQuestions[activeIndex].type +
+                          "，" +
+                          exam.shortAnswerQuestions[activeIndex].score +
+                          "分"
+                      }})</span
+                    >
+                    <span>{{
+                      exam.shortAnswerQuestions[activeIndex].question
+                    }}</span>
+                  </div>
+                </div>
+                <el-col style="margin-top: 16px">
+                  <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 4, maxRows: 4 }"
+                    placeholder="请输入答案"
+                    v-model="exam.shortAnswerQuestions[activeIndex].replyAnswer"
+                  >
+                  </el-input>
+                </el-col>
               </el-row>
             </el-row>
           </el-scrollbar>
@@ -170,7 +225,7 @@
         <div class="serial_number">
           <el-scrollbar class="scroll">
             <el-row v-show="exam.choiceQuestion.length > 0">
-              <el-col class="serial">单选题（{{ 20 }}分）</el-col>
+              <el-col class="serial">单选题（{{ countChoice }}分）</el-col>
               <ul class="clear-fix" style="padding: 0 20px">
                 <li
                   v-for="(item, index) in exam.choiceQuestion"
@@ -178,6 +233,7 @@
                   :class="{
                     'serial_btn left': true,
                     active: activeIndex === index && activeType === '单选题',
+                    finished: exam.choiceQuestion[index].replyAnswer,
                   }"
                   @click="handleClick(index, '单选题')"
                 >
@@ -186,7 +242,7 @@
               </ul>
             </el-row>
             <el-row v-show="exam.issueQuestion.length > 0">
-              <el-col class="serial">判断题（{{ 20 }}分）</el-col>
+              <el-col class="serial">判断题（{{ countIssue }}分）</el-col>
               <ul class="clear-fix" style="padding: 0 20px">
                 <li
                   v-for="(item, index) in exam.issueQuestion"
@@ -194,6 +250,7 @@
                   :class="{
                     'serial_btn left': true,
                     active: activeIndex === index && activeType === '判断题',
+                    finished: exam.issueQuestion[index].replyAnswer,
                   }"
                   @click="handleClick(index, '判断题')"
                 >
@@ -202,7 +259,7 @@
               </ul>
             </el-row>
             <el-row v-show="exam.completionQuestion.length > 0">
-              <el-col class="serial">填空题（{{ 20 }}分）</el-col>
+              <el-col class="serial">填空题（{{ countCompletion }}分）</el-col>
               <ul class="clear-fix" style="padding: 0 20px">
                 <li
                   v-for="(item, index) in exam.completionQuestion"
@@ -210,6 +267,7 @@
                   :class="{
                     'serial_btn left': true,
                     active: activeIndex === index && activeType === '填空题',
+                    finished: exam.completionQuestion[index].replyAnswer,
                   }"
                   @click="handleClick(index, '填空题')"
                 >
@@ -218,7 +276,7 @@
               </ul>
             </el-row>
             <el-row v-show="exam.shortAnswerQuestions.length > 0">
-              <el-col class="serial">简答题（{{ 20 }}分）</el-col>
+              <el-col class="serial">简答题（{{ countShortAnswer }}分）</el-col>
               <ul class="clear-fix" style="padding: 0 20px">
                 <li
                   v-for="(item, index) in exam.shortAnswerQuestions"
@@ -226,6 +284,7 @@
                   :class="{
                     'serial_btn left': true,
                     active: activeIndex === index && activeType === '简答题',
+                    finished: exam.shortAnswerQuestions[index].replyAnswer,
                   }"
                   @click="handleClick(index, '简答题')"
                 >
@@ -368,8 +427,81 @@ export default {
             replyAnswerHtml: "",
           },
         ],
-        completionQuestion: [{}, {}, {}, {}, {}, {}],
-        shortAnswerQuestions: [{}, {}, {}, {}, {}, {}],
+        completionQuestion: [
+          {
+            type: "填空题",
+            score: "3",
+            question: "四大名著有____,____,_____,______?",
+            questionHtml: "",
+            // 答案以及解析
+            answer: "",
+            answerdDetail: "",
+            answerdDetailHTML: "",
+            // 学生解答相关
+            replyScore: 0,
+            replyAnswer: "",
+            replyAnswerHtml: "",
+          },
+          {
+            type: "填空题",
+            score: "3",
+            question: "我思故我在的作者___?",
+            questionHtml: "",
+            // 答案以及解析
+            answer: "",
+            answerdDetail: "",
+            answerdDetailHTML: "",
+            // 学生解答相关
+            replyScore: 0,
+            replyAnswer: "",
+            replyAnswerHtml: "",
+          },
+          {
+            type: "填空题",
+            score: "3",
+            question: "窗前明月光,______________?",
+            questionHtml: "",
+            // 答案以及解析
+            answer: "",
+            answerdDetail: "",
+            answerdDetailHTML: "",
+            // 学生解答相关
+            replyScore: 0,
+            replyAnswer: "",
+            replyAnswerHtml: "",
+          },
+          {
+            type: "填空题",
+            score: "3",
+            question: "举头望明月,___________?",
+            questionHtml: "",
+            // 答案以及解析
+            answer: "",
+            answerdDetail: "",
+            answerdDetailHTML: "",
+            // 学生解答相关
+            replyScore: 0,
+            replyAnswer: "",
+            replyAnswerHtml: "",
+          },
+        ],
+        shortAnswerQuestions: [
+          {
+            type: "简答题",
+            score: "2",
+            question: "什么情况下🐴会吃掉翔？",
+            questionHtml: "",
+            // 答案
+            answer: "",
+            // 解析
+            answerdDetail: "",
+            answerdDetailHTML: "",
+            // 学生解答相关
+            replyScore: 0,
+            replyAnswer: "",
+            replyAnswerHtml: "",
+          },
+        ],
       },
     };
   },
@@ -423,6 +555,20 @@ export default {
       this.activeIndex = index;
       console.log(index, type);
     },
+    // 交卷
+    finishTest() {
+      this.exam.choiceQuestion.forEach((item, index) => {
+        if (item.answer == item.replyAnswer) {
+          this.exam.choiceQuestion[index].replyScore = item.score;
+        }
+      });
+      this.exam.issueQuestion.forEach((item, index) => {
+        if (item.answer == item.replyAnswer) {
+          this.exam.issueQuestion[index].replyScore = item.score;
+        }
+      });
+      console.log(this.exam);
+    },
   },
   computed: {
     // 选择题总分
@@ -441,6 +587,39 @@ export default {
       });
       return total;
     },
+    // 填空题总分
+    countCompletion() {
+      let total = 0;
+      this.exam.completionQuestion.forEach((obj) => {
+        total += obj.score * 1;
+      });
+      return total;
+    },
+    // 简答题总分
+    countShortAnswer() {
+      let total = 0;
+      this.exam.shortAnswerQuestions.forEach((obj) => {
+        total += obj.score * 1;
+      });
+      return total;
+    },
+    // 总分
+    countTest() {
+      return (
+        this.countChoice +
+        this.countIssue +
+        this.countCompletion +
+        this.countShortAnswer
+      );
+    },
+    countNum() {
+      return (
+        this.exam.choiceQuestion.length +
+        this.exam.issueQuestion.length +
+        this.exam.completionQuestion.length +
+        this.exam.shortAnswerQuestions.length
+      );
+    },
   },
 };
 </script>
@@ -454,6 +633,7 @@ export default {
     text-align: center
     line-height: 40px
     color: #fff
+    width: 90%
   .wrap
     .head_top
       height: 100px
@@ -488,6 +668,7 @@ export default {
       line-height: 20px
       color: #181E33
     .serial_btn
+      position: relative
       width: 32px
       height: 32px
       line-height: 32px
@@ -515,4 +696,14 @@ export default {
   .is-checked
     .el-radio__label
       color: #409EFF
+  .finished:before
+    position: absolute
+    content: '',
+    display: inline-block
+    width: 4px
+    height: 4px
+    border-radius: 50%
+    background-color: #4cd137
+    top: -4px
+    right: -4px
 </style>

@@ -560,6 +560,9 @@
 </template>
 
 <script>
+import { addExam } from "../../network/exam";
+import localStorage from "function/localstorage";
+import { notifyError, notifySuccess } from "function/utils";
 import { mavonEditor } from "mavon-editor";
 import { deepClone } from "function/utils";
 import "mavon-editor/dist/css/index.css";
@@ -692,7 +695,7 @@ export default {
       shortAnswerQuestions: $initShortAnswerQuestions(),
       // 试题内容
       exam: {
-        examName: "数据结构期末考试",
+        examName: "",
         choiceQuestion: [],
         issueQuestion: [],
         completionQuestion: [],
@@ -744,8 +747,21 @@ export default {
     },
   },
   methods: {
-    addExam() {
-      console.log("===> 完成");
+    async addExam() {
+      this.$confirm("试卷编辑完成?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(async () => {
+        let id = JSON.parse(localStorage.getLocalStorage("userInfo"))._id;
+        let res = await addExam(id, this.exam);
+        if (res.success) {
+          notifySuccess(this.$message, "添加试卷成功");
+          this.$router.push("/");
+        } else {
+          notifyError(this.$message, "服务端错误");
+        }
+      });
     },
     // 添加考试题目
     addQuestion(type) {
