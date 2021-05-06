@@ -11,6 +11,7 @@
           :key="index"
           :examData="item"
           @reftch="queryExamInfoList"
+          @click.native.stop="preview(item)"
         />
       </div>
     </el-scrollbar>
@@ -43,6 +44,9 @@ export default {
       this.tea_id = JSON.parse(localstorage.getLocalStorage("userInfo"))._id;
       let res = await queryExam(this.tea_id);
       this.examList = res.data ? res.data : [];
+    },
+    preview(item) {
+      window.open(`/preview?_id=${item._id}`);
     },
   },
 };

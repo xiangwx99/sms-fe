@@ -15,6 +15,7 @@ const routes = [
         name: "index",
         component: () => import("../layouts/Index.vue"),
       },
+
       {
         path: "/profile",
         name: "Profile",
@@ -52,6 +53,11 @@ const routes = [
   {
     path: "/test",
     component: () => import("views/test/index"),
+  },
+  {
+    path: "/preview",
+    name: "preview",
+    component: () => import("views/examManagement/childComponents/preview.vue"),
   },
 ];
 

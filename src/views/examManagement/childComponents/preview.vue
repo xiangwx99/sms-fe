@@ -1,16 +1,5 @@
 <template>
   <div class="test">
-    <div class="clear-fix">
-      <div class="nav_top left">考试</div>
-      <div
-        class="right"
-        style="width: 10%; line-height: 40px; text-align: center; background: #409EFF; cursor: pointer; color: #fff"
-        @click="finishTest"
-      >
-        交卷
-      </div>
-    </div>
-    <!-- <div class="title">期末考试-计算机网络</div> -->
     <div
       class="wrap"
       style="width: 1100px; margin: 0 auto; height: calc(100vh - 40px)"
@@ -20,17 +9,6 @@
           <h2>{{ exam.examName }}</h2>
           <div style="line-height: 32px; font-size: 14px; color: #A8A8B3;">
             题量：{{ countNum }} 总分：{{ countTest }}
-          </div>
-        </div>
-        <div class="right">
-          <div class="clock">
-            <i class="el-icon-alarm-clock" style="font-size: 24px"></i>
-            <span
-              ><span style="font-size: 20px">倒计时：</span
-              >{{ day > 0 ? day : ""
-              }}<span style="font-size: 20px">{{ day > 0 ? "天" : "" }}</span
-              >{{ hour }}:{{ min }}:{{ second }}</span
-            >
           </div>
         </div>
       </div>
@@ -76,8 +54,9 @@
                         style="line-height: 38px; margin-right: 10px; width: 40px"
                       >
                         <el-radio
-                          v-model="exam.choiceQuestion[activeIndex].replyAnswer"
+                          v-model="exam.choiceQuestion[activeIndex].answer"
                           :label="item.label"
+                          :disabled="true"
                         >
                           {{ item.label }}
                         </el-radio>
@@ -129,8 +108,9 @@
                         style="line-height: 38px; margin-right: 10px; width: 40px"
                       >
                         <el-radio
-                          v-model="exam.issueQuestion[activeIndex].replyAnswer"
+                          v-model="exam.issueQuestion[activeIndex].answer"
                           :label="item.label"
+                          :disabled="true"
                         >
                           {{ item.label }}
                         </el-radio>
@@ -177,7 +157,8 @@
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 4 }"
                     placeholder="请输入内容，多个空格使用‘&$&’分割开来"
-                    v-model="exam.completionQuestion[activeIndex].replyAnswer"
+                    v-model="exam.completionQuestion[activeIndex].answer"
+                    :disabled="true"
                   >
                   </el-input>
                 </el-col>
@@ -214,7 +195,8 @@
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 4 }"
                     placeholder="请输入答案"
-                    v-model="exam.shortAnswerQuestions[activeIndex].replyAnswer"
+                    v-model="exam.shortAnswerQuestions[activeIndex].answer"
+                    :disabled="true"
                   >
                   </el-input>
                 </el-col>
@@ -300,13 +282,13 @@
 </template>
 
 <script>
-import { queryExamById } from "../../network/exam";
+import { queryExamById } from "../../../network/exam";
 export default {
   name: "Test",
   async mounted() {
     let time = new Date().getTime() + 1000 * this.exam.lengthOfExamination * 60;
     this.curStartTime = new Date(time);
-    this.countTime();
+
     this.id = this.$route.query._id;
     await this.queryExamById(this.id);
   },
@@ -316,11 +298,7 @@ export default {
       activeType: "单选题",
       activeIndex: 0,
       // 倒计时相关
-      curStartTime: new Date(),
-      day: "0",
-      hour: "00",
-      min: "00",
-      second: "00",
+
       // 试卷内容
       exam: {
         examName: "考试",
@@ -415,68 +393,12 @@ export default {
       this.exam.lengthOfExamination = 90;
       console.log(this.exam);
     },
-    // 倒计时
-    countTime() {
-      // 获取当前时间
-      let date = new Date();
-      let now = date.getTime();
-      // 设置截止时间
-      let endDate = new Date(this.curStartTime); // this.curStartTime需要倒计时的日期
-      let end = endDate.getTime();
-      // 时间差
-      let leftTime = end - now;
-      // 定义变量 d,h,m,s保存倒计时的时间
-      if (leftTime >= 0) {
-        // 天
-        this.day = Math.floor(leftTime / 1000 / 60 / 60 / 24);
-        // 时
-        let h = Math.floor((leftTime / 1000 / 60 / 60) % 24);
-        this.hour = h < 10 ? "0" + h : h;
-        // 分
-        let m = Math.floor((leftTime / 1000 / 60) % 60);
-        this.min = m < 10 ? "0" + m : m;
-        // 秒
-        let s = Math.floor((leftTime / 1000) % 60);
-        this.second = s < 10 ? "0" + s : s;
-      } else {
-        this.day = 0;
-        this.hour = "00";
-        this.min = "00";
-        this.second = "00";
-      }
-      // 等于0的时候不调用
-      if (
-        Number(this.hour) === 0 &&
-        Number(this.day) === 0 &&
-        Number(this.min) === 0 &&
-        Number(this.second) === 0
-      ) {
-        console.log("==========>考试结束");
-        return;
-      } else {
-        // 递归每秒调用countTime方法，显示动态时间效果,
-        setTimeout(this.countTime, 1000);
-      }
-    },
+
     // active
     handleClick(index, type) {
       this.activeType = type;
       this.activeIndex = index;
       console.log(index, type);
-    },
-    // 交卷
-    finishTest() {
-      this.exam.choiceQuestion.forEach((item, index) => {
-        if (item.answer == item.replyAnswer) {
-          this.exam.choiceQuestion[index].replyScore = item.score;
-        }
-      });
-      this.exam.issueQuestion.forEach((item, index) => {
-        if (item.answer == item.replyAnswer) {
-          this.exam.issueQuestion[index].replyScore = item.score;
-        }
-      });
-      console.log(this.exam);
     },
   },
   computed: {
@@ -535,6 +457,11 @@ export default {
 
 <style lang="sass">
 .test
+  .is-checked
+    .el-radio__label
+      color: #3A8BFF !important
+    .el-radio__inner
+      border-color: #3A8BFF !important
   .title
   .nav_top
     height: 40px

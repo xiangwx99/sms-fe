@@ -19,7 +19,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item
                 icon="el-icon-delete"
-                @click.native="handleDelete(examData._id)"
+                @click.native.stop="handleDelete(examData._id)"
                 >删除</el-dropdown-item
               >
               <el-dropdown-item icon="el-icon-share">指派</el-dropdown-item>
@@ -75,6 +75,7 @@ export default {
   width: 240px;
   height: 240px;
   margin-top: 28px;
+  cursor: pointer;
 }
 .top-wrap {
   position: relative;

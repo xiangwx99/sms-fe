@@ -68,4 +68,9 @@ export default {
     display: none
   .is-vertical
     display: none
+  .exam-item
+    cursor: pointer
+  .exam-item:hover
+    .more
+      display: none
 </style>
