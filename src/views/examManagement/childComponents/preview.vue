@@ -69,6 +69,15 @@
                       </div>
                     </li>
                   </ul>
+                  <div>
+                    <div style="line-height: 20px; margin-bottom: 16px">
+                      答案：{{ exam.choiceQuestion[activeIndex].answer }}
+                    </div>
+                    <div style="line-height: 20px">
+                      解析：
+                      {{ exam.choiceQuestion[activeIndex].answerdDetail }}
+                    </div>
+                  </div>
                 </div>
               </el-row>
               <!-- 判断题 -->
@@ -124,6 +133,15 @@
                     </li>
                   </ul>
                 </div>
+                <div>
+                  <div style="line-height: 20px; margin-bottom: 16px">
+                    答案：{{ exam.issueQuestion[activeIndex].answer }}
+                  </div>
+                  <div style="line-height: 20px">
+                    解析：
+                    {{ exam.issueQuestion[activeIndex].answerdDetail }}
+                  </div>
+                </div>
               </el-row>
               <!-- 填空题 -->
               <el-row v-if="activeType === '填空题'">
@@ -152,7 +170,7 @@
                     }}</span>
                   </div>
                 </div>
-                <el-col style="margin-top: 16px">
+                <el-col style="margin-top: 16px; margin-bottom: 16px">
                   <el-input
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 4 }"
@@ -162,6 +180,19 @@
                   >
                   </el-input>
                 </el-col>
+                <div>
+                  <div style="line-height: 20px; margin-bottom: 16px; ">
+                    答案：{{
+                      exam.completionQuestion[activeIndex].answer
+                        .split("&$&")
+                        .join(" ")
+                    }}
+                  </div>
+                  <div style="line-height: 20px">
+                    解析：
+                    {{ exam.completionQuestion[activeIndex].answerdDetail }}
+                  </div>
+                </div>
               </el-row>
               <!-- 简答题 -->
               <el-row v-if="activeType === '简答题'">
@@ -190,7 +221,7 @@
                     }}</span>
                   </div>
                 </div>
-                <el-col style="margin-top: 16px">
+                <el-col style="margin-top: 16px; margin-bottom: 16px">
                   <el-input
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 4 }"
@@ -200,6 +231,15 @@
                   >
                   </el-input>
                 </el-col>
+                <div>
+                  <div style="line-height: 20px; margin-bottom: 16px; ">
+                    答案：{{ exam.shortAnswerQuestions[activeIndex].answer }}
+                  </div>
+                  <div style="line-height: 20px">
+                    解析：
+                    {{ exam.shortAnswerQuestions[activeIndex].answerdDetail }}
+                  </div>
+                </div>
               </el-row>
             </el-row>
           </el-scrollbar>
