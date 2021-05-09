@@ -1,10 +1,10 @@
 <template>
   <div class="wrap left" style="margin-right: 32px">
     <div class="exam-item">
-      <div class="top-wrap">
+      <div class="top-wrap" @click.stop="preview(examData)">
         <div class="content"></div>
       </div>
-      <div style="line-height: 40px; position: relative">
+      <div style="line-height: 40px; position: relative; height: 40px">
         <span class="text-ellipsis" style="width: 200px; font-size: 14px">{{
           examData.content.examName
         }}</span>
@@ -17,16 +17,20 @@
               <i class="el-icon-more"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-share" @click.native="assignExam">
+                指派
+              </el-dropdown-item>
               <el-dropdown-item
                 icon="el-icon-delete"
-                @click.native.stop="handleDelete(examData._id)"
-                >删除</el-dropdown-item
+                @click.native="handleDelete(examData._id)"
               >
-              <el-dropdown-item icon="el-icon-share">指派</el-dropdown-item>
+                删除
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
       </div>
+      <AssignDialog ref="AssignDialog" />
     </div>
   </div>
 </template>
@@ -34,6 +38,7 @@
 <script>
 import { deleteExam } from "../../../network/exam";
 import { notifyError, notifySuccess } from "function/utils";
+import AssignDialog from "./AssignDialog";
 export default {
   name: "ExamIte",
   props: {
@@ -44,12 +49,18 @@ export default {
       },
     },
   },
+  components: {
+    AssignDialog,
+  },
   data() {
     return {
       defaultImgUrl: require("../../../assets/img/exam_img.jpeg"),
     };
   },
   methods: {
+    preview(item) {
+      window.open(`/preview?_id=${item._id}`);
+    },
     async handleDelete(id) {
       this.$confirm("此操作将永久删除该试卷, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -64,6 +75,9 @@ export default {
           notifyError(this.$message, "服务端错误");
         }
       });
+    },
+    assignExam() {
+      this.$refs.AssignDialog.open();
     },
   },
 };

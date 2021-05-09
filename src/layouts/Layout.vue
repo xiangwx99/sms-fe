@@ -78,6 +78,7 @@
 
               <el-menu-item
                 index="1-4"
+                v-if="this.status === 'tea'"
                 @click.native="choosePath('/examManagement', '试卷管理')"
                 ><i class="el-icon-suitcase" style="color: #fff"></i
                 >试卷管理</el-menu-item

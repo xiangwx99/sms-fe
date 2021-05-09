@@ -35,7 +35,6 @@ export default {
   },
   methods: {
     joinTest(id) {
-      console.log(id);
       this.$confirm(
         "离开或退出考试界面答题计时不停止，请不要中途离开考试界面。",
         "提示",
@@ -73,4 +72,6 @@ export default {
   .exam-item:hover
     .more
       display: none
+.el-message-box
+  border-radius: 10px
 </style>
