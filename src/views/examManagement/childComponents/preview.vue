@@ -502,7 +502,7 @@ export default {
       color: #3A8BFF !important
     .el-radio__inner
       border-color: #3A8BFF !important
-  .title
+
   .nav_top
     height: 40px
     background: #3A4357

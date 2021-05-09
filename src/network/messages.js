@@ -20,3 +20,13 @@ export function queryMessages(page, size) {
     method: "post",
   });
 }
+
+export function deleteMessage(_id) {
+  return request({
+    url: "/deleteMessage",
+    data: {
+      _id,
+    },
+    method: "post",
+  });
+}

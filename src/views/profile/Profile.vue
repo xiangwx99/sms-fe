@@ -3,7 +3,7 @@
     <better-scroll class="bscroll">
       <div>
         <el-row>
-          <el-col class="title">用户头像</el-col>
+          <el-col class="title">用户照片</el-col>
           <el-col class="upload-wrap" @click.native="choosePicture">
             <click-upload ref="uploader" @getImgUrl="changeImg" />
             <img

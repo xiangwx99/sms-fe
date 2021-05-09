@@ -535,7 +535,6 @@ export default {
 
 <style lang="sass">
 .test
-  .title
   .nav_top
     height: 40px
     background: #3A4357
