@@ -45,7 +45,7 @@ export default {
           type: "warning",
         }
       ).then(() => {
-        this.$router.push(`/test?_id=${id}`);
+        window.open(`/test?_id=${id}`, "_blank");
       });
     },
   },

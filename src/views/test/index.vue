@@ -300,6 +300,7 @@
 </template>
 
 <script>
+import $ from "jquery";
 import { queryExamById } from "../../network/exam";
 export default {
   name: "Test",
@@ -309,6 +310,26 @@ export default {
     this.countTime();
     this.id = this.$route.query._id;
     await this.queryExamById(this.id);
+
+    // 屏蔽鼠标右键
+    document.oncontextmenu = function() {
+      return false;
+    };
+    let blurNum = 1;
+    let that = this;
+    $(window).on("blur resize", function() {
+      if (blurNum > 3) {
+        alert("你已经违规3次，考试结束！");
+        that.$router.push("/");
+      } else {
+        alert("考试中切换窗口违规" + blurNum + "次！");
+      }
+      blurNum++;
+    });
+
+    $(window).on("beforeunload", function() {
+      return "离开此页面将退出考试!";
+    });
   },
   data() {
     return {
@@ -529,6 +550,9 @@ export default {
         this.exam.shortAnswerQuestions.length
       );
     },
+  },
+  beforeDestroy() {
+    $(window).off("blur resize beforeunload");
   },
 };
 </script>
