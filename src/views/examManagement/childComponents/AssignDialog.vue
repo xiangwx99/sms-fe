@@ -74,7 +74,7 @@
           </el-col>
 
           <el-col :span="17">
-            <el-form-item label="开始时间" prop="time" class="title">
+            <el-form-item label="考试时间" prop="time" class="title">
               <el-date-picker
                 v-model="assignInfo.time"
                 type="datetimerange"
@@ -114,6 +114,7 @@ export default {
   mixins: [dataOptions],
   data() {
     return {
+      examId: null,
       show: false,
       majorOptions: [],
       gradeOptions: [
@@ -141,7 +142,8 @@ export default {
     };
   },
   methods: {
-    open() {
+    open(id) {
+      this.examId = id;
       this.show = true;
       this.assignInfo = $_init();
     },
@@ -158,6 +160,7 @@ export default {
     assignExam() {
       this.$refs["assignForm"].validate((val) => {
         console.log(this.assignInfo);
+        console.log(this.examId);
         if (val) {
           this.show = false;
         }

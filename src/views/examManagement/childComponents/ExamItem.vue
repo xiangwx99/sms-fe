@@ -59,7 +59,22 @@ export default {
   },
   methods: {
     preview(item) {
-      window.open(`/preview?_id=${item._id}`);
+      console.log(this.$route);
+      if (this.$route.fullPath === "/examination") {
+        this.$confirm(
+          "离开或退出考试界面答题计时不停止，请不要中途离开考试界面。",
+          "提示",
+          {
+            confirmButtonText: "进入考试",
+            cancelButtonText: "取消",
+            type: "warning",
+          }
+        ).then(() => {
+          window.open(`/test?_id=${item._id}`, "_blank");
+        });
+      } else if (this.$route.fullPath === "/examManagement") {
+        window.open(`/preview?_id=${item._id}`);
+      }
     },
     async handleDelete(id) {
       this.$confirm("此操作将永久删除该试卷, 是否继续?", "提示", {
@@ -77,7 +92,7 @@ export default {
       });
     },
     assignExam() {
-      this.$refs.AssignDialog.open();
+      this.$refs.AssignDialog.open(this.examData._id);
     },
   },
 };

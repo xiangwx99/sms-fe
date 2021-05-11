@@ -6,7 +6,6 @@
           v-for="(item, index) in examList"
           :key="index"
           :examData="item"
-          @click.stop.native="joinTest(item._id)"
         />
       </div>
     </el-scrollbar>
@@ -33,21 +32,6 @@ export default {
       examList: [],
     };
   },
-  methods: {
-    joinTest(id) {
-      this.$confirm(
-        "离开或退出考试界面答题计时不停止，请不要中途离开考试界面。",
-        "提示",
-        {
-          confirmButtonText: "进入考试",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      ).then(() => {
-        window.open(`/test?_id=${id}`, "_blank");
-      });
-    },
-  },
 };
 </script>
 
@@ -55,7 +39,7 @@ export default {
 .exam-center
   padding-top: 20px
   .exam-mannagement-scroll
-    height: calc(100vh - 200px)
+    height: calc(100vh - 140px)
 
     width: 100%
     .el-scrollbar__wrap
