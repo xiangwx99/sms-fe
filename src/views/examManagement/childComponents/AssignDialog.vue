@@ -97,7 +97,9 @@
 </template>
 
 <script>
+import localStorage from "function/localstorage";
 import { notifyError, notifySuccess } from "function/utils";
+import { assignExam } from "../../../network/assignExam";
 import dataOptions from "mixins/getNation";
 
 const $_init = () => {
@@ -116,6 +118,7 @@ export default {
     return {
       examId: null,
       show: false,
+      content: null,
       majorOptions: [],
       gradeOptions: [
         { value: "2017级", label: "2017级" },
@@ -142,8 +145,9 @@ export default {
     };
   },
   methods: {
-    open(id) {
+    open(id, content) {
       this.examId = id;
+      this.content = content;
       this.show = true;
       this.assignInfo = $_init();
     },
@@ -157,12 +161,25 @@ export default {
         });
       }
     },
-    assignExam() {
+    async assignExam() {
       this.$refs["assignForm"].validate((val) => {
-        console.log(this.assignInfo);
-        console.log(this.examId);
         if (val) {
-          this.show = false;
+          let exam_id = this.examId;
+          let tea_id = JSON.parse(localStorage.getLocalStorage("userInfo"))
+            ?._id;
+          assignExam(this.assignInfo, tea_id, exam_id, this.content).then(
+            (resolve) => {
+              this.show = false;
+              if (resolve.success) {
+                notifySuccess(
+                  this.$message,
+                  `成功为${resolve.count}人分配试卷!`
+                );
+              } else {
+                notifyError(this.$message, "试卷分配失败!");
+              }
+            }
+          );
         }
       });
     },

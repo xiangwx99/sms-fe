@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { queryExam } from "../../network/exam";
+import { queryAssignExam } from "../../network/assignExam";
 import localstorage from "../../function/localstorage";
 import ExamItem from "views/examManagement/childComponents/ExamItem";
 import { notifyError, notifySuccess } from "function/utils";
@@ -23,8 +23,8 @@ export default {
     ExamItem,
   },
   async mounted() {
-    this.tea_id = JSON.parse(localstorage.getLocalStorage("userInfo"))._id;
-    let res = await queryExam(this.tea_id);
+    this.stu_id = JSON.parse(localstorage.getLocalStorage("userInfo"))._id;
+    let res = await queryAssignExam(this.stu_id);
     this.examList = res.data ? res.data : [];
   },
   data() {

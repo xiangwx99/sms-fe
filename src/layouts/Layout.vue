@@ -64,6 +64,7 @@
             >
             <el-menu-item-group>
               <el-menu-item
+                v-if="this.status === 'stu'"
                 index="1-1"
                 @click.native="choosePath('/examination', '考试中心')"
                 ><i class="el-icon-reading" style="color: #fff"></i
@@ -73,7 +74,7 @@
                 index="1-2"
                 @click.native="choosePath('/grade', '成绩查询')"
                 ><i class="el-icon-document" style="color: #fff"></i
-                >成绩查询</el-menu-item
+                >成绩管理</el-menu-item
               >
 
               <el-menu-item

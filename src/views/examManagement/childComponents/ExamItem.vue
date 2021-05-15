@@ -92,7 +92,7 @@ export default {
       });
     },
     assignExam() {
-      this.$refs.AssignDialog.open(this.examData._id);
+      this.$refs.AssignDialog.open(this.examData._id, this.examData.content);
     },
   },
 };
