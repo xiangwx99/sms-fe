@@ -34,11 +34,17 @@
           v-if="path === '/examination'"
           style="font-size: 14px; font-weight: 600"
         >
-          <span v-show="status === '未开始'" style="color: #ced6e0;"
+          <span v-show="status === '未完成'" style="color: #ced6e0;"
+            >未完成</span
+          >
+          <span v-show="status === '未开始'" style="color: #747d8c"
             >未开始</span
           >
           <span v-show="status === '进行中'" style="color: #00b894"
             >进行中</span
+          >
+          <span v-show="status === '阅卷中'" style="color: #F79F1F"
+            >阅卷中</span
           >
           <span v-show="status === '已完成'">
             <span style="color: #009432">90分</span>
@@ -70,14 +76,27 @@ export default {
   },
   mounted() {
     if (this.examData.time) {
+      console.log(this.examData);
       let startTime = new Date(this.examData.time[0]);
       let endTime = new Date(this.examData.time[1]);
       if (new Date() < startTime) {
         this.status = "未开始";
       } else if (new Date() > endTime) {
-        this.status = "已完成";
+        if (this.examData.status === "pending") {
+          this.status = "未完成";
+        } else if (this.examData.status === "half") {
+          this.status = "阅卷中";
+        } else {
+          this.status = "已完成";
+        }
       } else {
-        this.status = "进行中";
+        if (this.examData.status === "pending") {
+          this.status = "进行中";
+        } else if (this.examData.status === "half") {
+          this.status = "阅卷中";
+        } else {
+          this.status = "已完成";
+        }
       }
     }
   },
@@ -90,6 +109,7 @@ export default {
   },
   methods: {
     preview(item) {
+      // console.log(item);
       if (this.$route.fullPath === "/examination") {
         this.$confirm(
           "离开或退出考试界面答题计时不停止，请不要中途离开考试界面。",
@@ -106,9 +126,19 @@ export default {
           if (new Date() < startTime) {
             notifyTips(this.$message, "未到考试时间");
           } else if (new Date() > endTime) {
-            notifyTips(this.$message, "考试已结束");
+            if (item.status === "pending") {
+              notifyTips(this.$message, "试卷未作答，禁止查看");
+            } else if (item.status === "half") {
+              notifyTips(this.$message, "试卷批阅中，禁止查看");
+            } else {
+              console.log("-====> 阅读");
+            }
           } else {
-            window.open(`/test?_id=${item._id}`, "_blank");
+            if (item.status === "pending") {
+              window.open(`/test?_id=${item._id}`, "_blank");
+            } else if (item.status === "half") {
+              notifyTips(this.$message, "试卷已提交, 不允许查看");
+            }
           }
         });
       } else if (this.$route.fullPath === "/examManagement") {

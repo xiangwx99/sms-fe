@@ -32,3 +32,15 @@ export function queryAssignExamById(_id) {
     method: "post",
   });
 }
+
+export function updateAssignExamById(id, status, content) {
+  return request({
+    url: "/updateAssignExamById",
+    data: {
+      id,
+      status,
+      content,
+    },
+    method: "post",
+  });
+}

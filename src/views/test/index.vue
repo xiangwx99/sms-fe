@@ -301,13 +301,14 @@
 
 <script>
 import $ from "jquery";
-import { queryAssignExamById } from "../../network/assignExam";
+import {
+  queryAssignExamById,
+  updateAssignExamById,
+} from "../../network/assignExam";
+import { notifyError, notifySuccess } from "function/utils";
 export default {
   name: "Test",
   async mounted() {
-    let time = new Date().getTime() + 1000 * this.exam.lengthOfExamination * 60;
-    this.curStartTime = new Date(time);
-    this.countTime();
     this.id = this.$route.query._id;
     await this.queryExamById(this.id);
 
@@ -426,16 +427,17 @@ export default {
           },
         ],
       },
+      examInfo: null,
     };
   },
   methods: {
     // 试卷数据
     async queryExamById(id) {
       let res = await queryAssignExamById(id);
-      console.log(res.data.time);
       this.exam = res.data.content;
-      this.exam.lengthOfExamination = 90;
-      console.log(this.exam);
+      this.examInfo = res.data;
+      this.curStartTime = new Date(res.data.time[1]);
+      this.countTime();
     },
     // 倒计时
     countTime() {
@@ -487,7 +489,7 @@ export default {
       console.log(index, type);
     },
     // 交卷
-    finishTest() {
+    async finishTest() {
       this.exam.choiceQuestion.forEach((item, index) => {
         if (item.answer == item.replyAnswer) {
           this.exam.choiceQuestion[index].replyScore = item.score;
@@ -498,7 +500,23 @@ export default {
           this.exam.issueQuestion[index].replyScore = item.score;
         }
       });
-      console.log(this.exam);
+      this.examInfo.content = this.exam;
+      // 试卷需要教师审批之后才可以变为完成状态
+      // pending => 初始
+      // half => 学生提交 => 此时学生不可以观看试卷答题情况
+      // finished => 完成
+      this.examInfo.status = "half";
+      let res = await updateAssignExamById(
+        this.examInfo._id,
+        this.examInfo.status,
+        this.examInfo.content
+      );
+      if (res.success) {
+        notifySuccess(this.$message, "试卷提交成功");
+      } else {
+        notifyError(this.$message, "试卷提交失败");
+      }
+      this.$router.push("/examination");
     },
   },
   computed: {
