@@ -301,7 +301,7 @@
 
 <script>
 import $ from "jquery";
-import { queryExamById } from "../../network/exam";
+import { queryAssignExamById } from "../../network/assignExam";
 export default {
   name: "Test",
   async mounted() {
@@ -317,19 +317,19 @@ export default {
     };
     let blurNum = 1;
     let that = this;
-    $(window).on("blur resize", function() {
-      if (blurNum > 3) {
-        alert("你已经违规3次，考试结束！");
-        that.$router.push("/");
-      } else {
-        alert("考试中切换窗口违规" + blurNum + "次！");
-      }
-      blurNum++;
-    });
+    // $(window).on("blur resize", function() {
+    //   if (blurNum > 3) {
+    //     alert("你已经违规3次，考试结束！");
+    //     that.$router.push("/");
+    //   } else {
+    //     alert("考试中切换窗口违规" + blurNum + "次！");
+    //   }
+    //   blurNum++;
+    // });
 
-    $(window).on("beforeunload", function() {
-      return "离开此页面将退出考试!";
-    });
+    // $(window).on("beforeunload", function() {
+    //   return "离开此页面将退出考试!";
+    // });
   },
   data() {
     return {
@@ -431,7 +431,8 @@ export default {
   methods: {
     // 试卷数据
     async queryExamById(id) {
-      let res = await queryExamById(id);
+      let res = await queryAssignExamById(id);
+      console.log(res.data.time);
       this.exam = res.data.content;
       this.exam.lengthOfExamination = 90;
       console.log(this.exam);

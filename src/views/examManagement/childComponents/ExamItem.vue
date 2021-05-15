@@ -29,6 +29,22 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
+        <span
+          class="status"
+          v-if="path === '/examination'"
+          style="font-size: 14px; font-weight: 600"
+        >
+          <span v-show="status === '未开始'" style="color: #ced6e0;"
+            >未开始</span
+          >
+          <span v-show="status === '进行中'" style="color: #00b894"
+            >进行中</span
+          >
+          <span v-show="status === '已完成'">
+            <span style="color: #009432">90分</span>
+            <span style="color: #EA2027">59分</span>
+          </span>
+        </span>
       </div>
       <AssignDialog ref="AssignDialog" />
     </div>
@@ -37,7 +53,7 @@
 
 <script>
 import { deleteExam } from "../../../network/exam";
-import { notifyError, notifySuccess } from "function/utils";
+import { notifyError, notifySuccess, notifyTips } from "function/utils";
 import AssignDialog from "./AssignDialog";
 export default {
   name: "ExamIte",
@@ -52,14 +68,28 @@ export default {
   components: {
     AssignDialog,
   },
+  mounted() {
+    if (this.examData.time) {
+      let startTime = new Date(this.examData.time[0]);
+      let endTime = new Date(this.examData.time[1]);
+      if (new Date() < startTime) {
+        this.status = "未开始";
+      } else if (new Date() > endTime) {
+        this.status = "已完成";
+      } else {
+        this.status = "进行中";
+      }
+    }
+  },
   data() {
     return {
       defaultImgUrl: require("../../../assets/img/exam_img.jpeg"),
+      path: this.$route.fullPath,
+      status: "",
     };
   },
   methods: {
     preview(item) {
-      console.log(this.$route);
       if (this.$route.fullPath === "/examination") {
         this.$confirm(
           "离开或退出考试界面答题计时不停止，请不要中途离开考试界面。",
@@ -70,7 +100,16 @@ export default {
             type: "warning",
           }
         ).then(() => {
-          window.open(`/test?_id=${item._id}`, "_blank");
+          let startTime = new Date(item.time[0]);
+          let endTime = new Date(item.time[1]);
+
+          if (new Date() < startTime) {
+            notifyTips(this.$message, "未到考试时间");
+          } else if (new Date() > endTime) {
+            notifyTips(this.$message, "考试已结束");
+          } else {
+            window.open(`/test?_id=${item._id}`, "_blank");
+          }
         });
       } else if (this.$route.fullPath === "/examManagement") {
         window.open(`/preview?_id=${item._id}`);
@@ -144,5 +183,11 @@ export default {
 }
 .exam-item:hover .more {
   display: inline-block;
+}
+
+.exam-item .status {
+  position: absolute;
+  bottom: 0;
+  right: 12px;
 }
 </style>

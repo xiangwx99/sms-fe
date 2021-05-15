@@ -22,3 +22,13 @@ export function queryAssignExam(query) {
     method: "post",
   });
 }
+
+export function queryAssignExamById(_id) {
+  return request({
+    url: "/queryAssignExamById",
+    data: {
+      _id,
+    },
+    method: "post",
+  });
+}
