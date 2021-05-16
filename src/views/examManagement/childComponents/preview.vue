@@ -326,9 +326,6 @@ import { queryExamById } from "../../../network/exam";
 export default {
   name: "Test",
   async mounted() {
-    let time = new Date().getTime() + 1000 * this.exam.lengthOfExamination * 60;
-    this.curStartTime = new Date(time);
-
     this.id = this.$route.query._id;
     await this.queryExamById(this.id);
   },

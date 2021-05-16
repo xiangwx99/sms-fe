@@ -67,6 +67,12 @@ const routes = [
     name: "MarkPapers",
     component: () => import("views/review/childComponents/MarkingPapers.vue"),
   },
+  {
+    path: "/preview",
+    name: "preview",
+    component: () =>
+      import("../views/examManagement/childComponents/preview.vue"),
+  },
 ];
 
 export default routes;

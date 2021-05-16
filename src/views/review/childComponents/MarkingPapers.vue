@@ -1,13 +1,13 @@
 <template>
   <div class="mark">
     <div class="clear-fix">
-      <div class="nav_top left">考试</div>
+      <div class="nav_top left">试卷批阅</div>
       <div
         class="right"
         style="width: 10%; line-height: 40px; text-align: center; background: #409EFF; cursor: pointer; color: #fff"
         @click="finishTest"
       >
-        交卷
+        完成批阅
       </div>
     </div>
     <!-- <div class="title">期末考试-计算机网络</div> -->
@@ -80,6 +80,34 @@
                       </div>
                     </li>
                   </ul>
+                  <el-row class="clear-fix" style="line-height: 32px">
+                    <el-row>
+                      <el-col :span="2" style="text-align: left">答案: </el-col>
+                      <el-col :span="22" style="float: right">{{
+                        exam.choiceQuestion[activeIndex].answer
+                      }}</el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="2" style="text-align: left">解析: </el-col>
+                      <el-col :span="22" style="float: right">{{
+                        exam.choiceQuestion[activeIndex].answerdDetail
+                      }}</el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="2" style="text-align: left">得分: </el-col>
+                      <el-col :span="22" style="float: right">{{
+                        exam.choiceQuestion[activeIndex].replyScore
+                      }}</el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="3" style="text-align: left"
+                        >学生做答:
+                      </el-col>
+                      <el-col :span="21" style="float: right">{{
+                        exam.choiceQuestion[activeIndex].replyAnswer
+                      }}</el-col>
+                    </el-row>
+                  </el-row>
                 </div>
               </el-row>
               <!-- 判断题 -->
@@ -134,6 +162,34 @@
                       </div>
                     </li>
                   </ul>
+                  <el-row class="clear-fix" style="line-height: 32px">
+                    <el-row>
+                      <el-col :span="2" style="text-align: left">答案: </el-col>
+                      <el-col :span="22" style="float: right">{{
+                        exam.issueQuestion[activeIndex].answer
+                      }}</el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="2" style="text-align: left">解析: </el-col>
+                      <el-col :span="22" style="float: right">{{
+                        exam.issueQuestion[activeIndex].answerdDetail
+                      }}</el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="2" style="text-align: left">得分: </el-col>
+                      <el-col :span="22" style="float: right">{{
+                        exam.issueQuestion[activeIndex].replyScore
+                      }}</el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="3" style="text-align: left"
+                        >学生做答:
+                      </el-col>
+                      <el-col :span="21" style="float: right">{{
+                        exam.issueQuestion[activeIndex].replyAnswer
+                      }}</el-col>
+                    </el-row>
+                  </el-row>
                 </div>
               </el-row>
               <!-- 填空题 -->
@@ -165,6 +221,7 @@
                 </div>
                 <el-col style="margin-top: 16px">
                   <el-input
+                    disabled
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 4 }"
                     placeholder="请输入内容，多个空格使用‘&$&’分割开来"
@@ -172,6 +229,49 @@
                   >
                   </el-input>
                 </el-col>
+                <el-row class="clear-fix" style="line-height: 32px">
+                  <el-row>
+                    <el-col :span="2" style="text-align: left">答案: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      exam.completionQuestion[activeIndex].answer
+                        .split("&$&")
+                        .join(", ")
+                    }}</el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="2" style="text-align: left">解析: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      exam.completionQuestion[activeIndex].answerdDetail
+                    }}</el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="2" style="text-align: left">得分: </el-col>
+                    <el-col
+                      :span="22"
+                      style="float: right"
+                      class="replay_score"
+                    >
+                      <el-input-number
+                        controls-position="right"
+                        :min="0"
+                        :max="20"
+                        v-model="
+                          exam.completionQuestion[activeIndex].replyScore
+                        "
+                      ></el-input-number>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="3" style="text-align: left"
+                      >学生做答:
+                    </el-col>
+                    <el-col :span="21" style="float: right">{{
+                      exam.completionQuestion[activeIndex].replyAnswer
+                        .split("&$&")
+                        .join(", ")
+                    }}</el-col>
+                  </el-row>
+                </el-row>
               </el-row>
               <!-- 简答题 -->
               <el-row v-if="activeType === '简答题'">
@@ -202,6 +302,7 @@
                 </div>
                 <el-col style="margin-top: 16px">
                   <el-input
+                    disabled
                     type="textarea"
                     :autosize="{ minRows: 4, maxRows: 4 }"
                     placeholder="请输入答案"
@@ -209,6 +310,45 @@
                   >
                   </el-input>
                 </el-col>
+                <el-row class="clear-fix" style="line-height: 32px">
+                  <el-row>
+                    <el-col :span="2" style="text-align: left">答案: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      exam.shortAnswerQuestions[activeIndex].answer
+                    }}</el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="2" style="text-align: left">解析: </el-col>
+                    <el-col :span="22" style="float: right">{{
+                      exam.shortAnswerQuestions[activeIndex].answerdDetail
+                    }}</el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="2" style="text-align: left">得分: </el-col>
+                    <el-col
+                      :span="22"
+                      style="float: right"
+                      class="replay_score"
+                    >
+                      <el-input-number
+                        controls-position="right"
+                        :min="0"
+                        :max="20"
+                        v-model="
+                          exam.shortAnswerQuestions[activeIndex].replyScore
+                        "
+                      ></el-input-number>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="3" style="text-align: left"
+                      >学生做答:
+                    </el-col>
+                    <el-col :span="21" style="float: right">{{
+                      exam.shortAnswerQuestions[activeIndex].replyAnswer
+                    }}</el-col>
+                  </el-row>
+                </el-row>
               </el-row>
             </el-row>
           </el-scrollbar>
@@ -413,26 +553,16 @@ export default {
     handleClick(index, type) {
       this.activeType = type;
       this.activeIndex = index;
-      console.log(index, type);
+      // console.log(index, type);
     },
     // 交卷
     async finishTest() {
-      this.exam.choiceQuestion.forEach((item, index) => {
-        if (item.answer == item.replyAnswer) {
-          this.exam.choiceQuestion[index].replyScore = item.score;
-        }
-      });
-      this.exam.issueQuestion.forEach((item, index) => {
-        if (item.answer == item.replyAnswer) {
-          this.exam.issueQuestion[index].replyScore = item.score;
-        }
-      });
       this.examInfo.content = this.exam;
       // 试卷需要教师审批之后才可以变为完成状态
       // pending => 初始
       // half => 学生提交 => 此时学生不可以观看试卷答题情况
       // finished => 完成
-      this.examInfo.status = "half";
+      this.examInfo.status = "finished";
       // let res = await updateAssignExamById(
       //   this.examInfo._id,
       //   this.examInfo.status,
@@ -502,6 +632,11 @@ export default {
 
 <style lang="sass">
 .mark
+  .replay_score
+    .el-input-number
+      width: 100px
+      span
+        display: none
   .is-checked
     .el-radio__label
       color: #409EFF !important
