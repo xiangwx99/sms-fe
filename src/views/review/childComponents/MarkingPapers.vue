@@ -1,6 +1,6 @@
 <template>
   <div class="mark">
-    <div class="clear-fix">
+    <div class="clear-fix" v-if="status !== 'stu'">
       <div class="nav_top left">试卷批阅</div>
       <div
         class="right"
@@ -10,6 +10,7 @@
         完成批阅
       </div>
     </div>
+
     <!-- <div class="title">期末考试-计算机网络</div> -->
     <div
       class="wrap"
@@ -258,6 +259,7 @@
                         v-model="
                           exam.completionQuestion[activeIndex].replyScore
                         "
+                        :disabled="status === 'stu'"
                       ></el-input-number>
                     </el-col>
                   </el-row>
@@ -337,6 +339,7 @@
                         v-model="
                           exam.shortAnswerQuestions[activeIndex].replyScore
                         "
+                        :disabled="status === 'stu'"
                       ></el-input-number>
                     </el-col>
                   </el-row>
@@ -436,15 +439,17 @@ import {
   updateAssignExamById,
 } from "../../../network/assignExam";
 import { notifyError, notifySuccess } from "function/utils";
+import localStorage from "function/localstorage";
 export default {
   name: "MarkPapers",
   async mounted() {
     this.id = this.$route.query.id;
-    console.log(this.$route.query);
     await this.queryExamById(this.id);
+    this.status = localStorage.getLocalStorage("status");
   },
   data() {
     return {
+      status: "stu",
       id: null,
       activeType: "单选题",
       activeIndex: 0,

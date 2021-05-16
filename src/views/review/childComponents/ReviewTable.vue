@@ -13,7 +13,7 @@
           style="color: #409EFF"
         >
           <template slot-scope="scope">
-            <el-button type="text" @click="markPaper(scope.row._id)">{{
+            <el-button type="text" @click="markPaper(scope.row)">{{
               scope.row.name
             }}</el-button></template
           >
@@ -65,10 +65,19 @@
 <script>
 import { queryAssignExamByTeaId } from "network/assignExam";
 import localStorage from "function/localstorage";
+import { notifyTips } from "function/utils";
 export default {
   name: "ReviewTable",
   mounted() {
     this.queryReviewData();
+  },
+  props: {
+    status: {
+      type: String,
+      default() {
+        return "all";
+      },
+    },
   },
   data() {
     return {
@@ -82,14 +91,26 @@ export default {
       this.tableData = [];
       let id = JSON.parse(localStorage.getLocalStorage("userInfo"))?._id;
       let { data } = await queryAssignExamByTeaId(id);
-      console.log(data);
+      // console.log(data);
       data.forEach((item) => {
         item.totalScore = this.totalScore(item.content);
-        this.tableData.push(item);
+        if (this.status === "all") {
+          this.tableData.push(item);
+        } else if (this.status === "finished" && item.status === "finished") {
+          this.tableData.push(item);
+        } else if (this.status === "other" && item.status !== "finished") {
+          this.tableData.push(item);
+        }
       });
     },
-    markPaper(id) {
-      this.$router.push(`/mark-papers?id=${id}`);
+    markPaper(obj) {
+      let id = obj._id;
+      console.log(obj);
+      if (obj.status === "pending") {
+        notifyTips(this.$message, "未作答试卷，禁止批改!");
+      } else {
+        this.$router.push(`/mark-papers?id=${id}`);
+      }
     },
     // 计算总分
     totalScore(content) {

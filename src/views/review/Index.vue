@@ -1,17 +1,23 @@
 <template>
   <el-tabs v-model="tab" @tab-click="handleClick">
-    <el-tab-pane label="所有试卷" name="tab-1"><CourseTable /></el-tab-pane>
-    <el-tab-pane label="未完成" name="tab-3">未完成</el-tab-pane>
-    <el-tab-pane label="已完成" name="tab-2">已完成</el-tab-pane>
+    <el-tab-pane label="所有试卷" name="tab-1"
+      ><ReviewTable status="all"
+    /></el-tab-pane>
+    <el-tab-pane label="未完成" name="tab-3"
+      ><ReviewTable status="other"
+    /></el-tab-pane>
+    <el-tab-pane label="已完成" name="tab-2"
+      ><ReviewTable status="finished"
+    /></el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
-import CourseTable from "./childComponents/ReviewTable";
+import ReviewTable from "./childComponents/ReviewTable";
 export default {
   name: "Course",
   components: {
-    CourseTable,
+    ReviewTable,
   },
   mounted() {
     this.tab = `tab-${this.tabs}`;

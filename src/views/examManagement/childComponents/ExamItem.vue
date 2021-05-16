@@ -47,8 +47,12 @@
             >阅卷中</span
           >
           <span v-show="status === '已完成'">
-            <span style="color: #009432">90分</span>
-            <span style="color: #EA2027">59分</span>
+            <span style="color: #009432" v-show="countScore > 59">{{
+              countScore
+            }}</span>
+            <span style="color: #EA2027" v-show="countScore < 60">{{
+              countScore
+            }}</span>
           </span>
         </span>
       </div>
@@ -99,12 +103,14 @@ export default {
         }
       }
     }
+    this.countScore = this.totalScore(this.examData.content);
   },
   data() {
     return {
       defaultImgUrl: require("../../../assets/img/exam_img.jpeg"),
       path: this.$route.fullPath,
       status: "",
+      countScore: 0,
     };
   },
   methods: {
@@ -131,7 +137,7 @@ export default {
             } else if (item.status === "half") {
               notifyTips(this.$message, "试卷批阅中，禁止查看");
             } else {
-              console.log("-====> 阅读");
+              this.$router.push(`/mark-papers?id=${item._id}`);
             }
           } else {
             if (item.status === "pending") {
@@ -162,6 +168,25 @@ export default {
     },
     assignExam() {
       this.$refs.AssignDialog.open(this.examData._id, this.examData.content);
+    },
+    // 计算总分
+    totalScore(content) {
+      let sum = 0;
+      if (content.choiceQuestion?.length > 0) {
+        content.choiceQuestion.forEach((item) => (sum += item.replyScore));
+      }
+      if (content.completionQuestion?.length > 0) {
+        content.completionQuestion.forEach((item) => (sum += item.replyScore));
+      }
+      if (content.issueQuestion?.length > 0) {
+        content.issueQuestion.forEach((item) => (sum += item.replyScore));
+      }
+      if (content.shortAnswerQuestions?.length > 0) {
+        content.shortAnswerQuestions.forEach(
+          (item) => (sum += item.replyScore)
+        );
+      }
+      return sum;
     },
   },
 };
