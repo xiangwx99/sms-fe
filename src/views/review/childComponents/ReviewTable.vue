@@ -1,5 +1,5 @@
 <template>
-  <div class="course-table">
+  <div class="review-table">
     <el-scrollbar class="course-table-scroll">
       <el-table
         :border="showStyle"
@@ -45,7 +45,17 @@
             }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="score" label="分数" align="center">
+        <el-table-column prop="totalScore" label="分数" align="center">
+          <template slot-scope="scope">
+            <span
+              v-if="scope.row.totalScore >= 60"
+              style="color: rgb(0, 148, 50);"
+              >{{ scope.row.totalScore }}</span
+            >
+            <span v-else style="color: rgb(234, 32, 39);">{{
+              scope.row.totalScore
+            }}</span>
+          </template>
         </el-table-column>
       </el-table>
     </el-scrollbar>
@@ -69,20 +79,43 @@ export default {
   },
   methods: {
     async queryReviewData() {
+      this.tableData = [];
       let id = JSON.parse(localStorage.getLocalStorage("userInfo"))?._id;
       let { data } = await queryAssignExamByTeaId(id);
-      this.tableData = data;
       console.log(data);
+      data.forEach((item) => {
+        item.totalScore = this.totalScore(item.content);
+        this.tableData.push(item);
+      });
     },
     markPaper(id) {
       this.$router.push(`/mark-papers?id=${id}`);
+    },
+    // 计算总分
+    totalScore(content) {
+      let sum = 0;
+      if (content.choiceQuestion?.length > 0) {
+        content.choiceQuestion.forEach((item) => (sum += item.replyScore));
+      }
+      if (content.completionQuestion?.length > 0) {
+        content.completionQuestion.forEach((item) => (sum += item.replyScore));
+      }
+      if (content.issueQuestion?.length > 0) {
+        content.issueQuestion.forEach((item) => (sum += item.replyScore));
+      }
+      if (content.shortAnswerQuestions?.length > 0) {
+        content.shortAnswerQuestions.forEach(
+          (item) => (sum += item.replyScore)
+        );
+      }
+      return sum;
     },
   },
 };
 </script>
 
 <style lang="sass">
-.course-table
+.review-table
   .el-select
     margin-right: 10px
   .el-select__tags

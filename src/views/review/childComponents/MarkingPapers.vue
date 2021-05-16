@@ -563,17 +563,17 @@ export default {
       // half => 学生提交 => 此时学生不可以观看试卷答题情况
       // finished => 完成
       this.examInfo.status = "finished";
-      // let res = await updateAssignExamById(
-      //   this.examInfo._id,
-      //   this.examInfo.status,
-      //   this.examInfo.content
-      // );
+      let res = await updateAssignExamById(
+        this.examInfo._id,
+        this.examInfo.status,
+        this.examInfo.content
+      );
       if (res.success) {
-        notifySuccess(this.$message, "试卷提交成功");
+        notifySuccess(this.$message, "批阅成功");
       } else {
-        notifyError(this.$message, "试卷提交失败");
+        notifyError(this.$message, "批阅失败");
       }
-      this.$router.push("/examination");
+      this.$router.push("/review");
     },
   },
   computed: {
