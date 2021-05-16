@@ -85,6 +85,13 @@
                 >试卷管理</el-menu-item
               >
               <el-menu-item
+                index="1-6"
+                v-if="this.status === 'tea'"
+                @click.native="choosePath('/review', '试卷批阅')"
+                ><i class="el-icon-folder-checked" style="color: #fff"></i
+                >试卷批阅</el-menu-item
+              >
+              <el-menu-item
                 v-if="this.status === 'tea'"
                 index="1-3"
                 @click.native="choosePath('/addstudent', '学生录入')"

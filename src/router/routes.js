@@ -44,6 +44,10 @@ const routes = [
         path: "/examManagement",
         component: () => import("views/examManagement/ExamManagement"),
       },
+      {
+        path: "/review",
+        component: () => import("views/review/Index"),
+      },
     ],
   },
   {
@@ -55,9 +59,13 @@ const routes = [
     component: () => import("views/test/index"),
   },
   {
-    path: "/preview",
-    name: "preview",
-    component: () => import("views/examManagement/childComponents/preview.vue"),
+    path: "/test",
+    component: () => import("views/test/index"),
+  },
+  {
+    path: "/mark-papers",
+    name: "MarkPapers",
+    component: () => import("views/review/childComponents/MarkingPapers.vue"),
   },
 ];
 

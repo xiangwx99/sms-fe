@@ -44,3 +44,13 @@ export function updateAssignExamById(id, status, content) {
     method: "post",
   });
 }
+
+export function queryAssignExamByTeaId(id) {
+  return request({
+    url: "/queryAssignExamByTeaId",
+    data: {
+      id,
+    },
+    method: "post",
+  });
+}
