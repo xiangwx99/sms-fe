@@ -1,6 +1,60 @@
 <template>
   <div class="review-table">
-    <el-scrollbar class="course-table-scroll">
+    <el-row style="margin-bottom: 20px;">
+      <el-row
+        style="margin-bottom: 15px; font-size: 14px; line-height: 24px; height: 24px"
+        class="flex"
+      >
+        <div style="margin-right: 5px">筛选项:</div>
+        <div v-for="(item, index) in filterOptions" :key="index">
+          <div
+            style="background-color: #F1F2F2; margin: 0 5px; border-radius: 4px"
+            v-if="item.value.length > 0"
+          >
+            <span style="padding: 0 5px; color: #999">{{ item.label }}:</span>
+            <span v-for="item in item.value" :key="item">
+              <span style="margin: 0 3px">{{ item }}</span>
+            </span>
+          </div>
+        </div>
+        <div>
+          <el-button
+            style="color: #19AAF8; padding: 0px; border: none"
+            @click="clearFilter"
+          >清除所有</el-button
+          >
+        </div>
+      </el-row>
+      <el-col class="left flex select" :span="18">
+        <el-select
+          v-model="filterOptions[0].value"
+          multiple
+          placeholder="试卷名"
+          @change="$_request"
+        >
+          <el-option
+            v-for="item in filterOptions[0].options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-select
+          v-model="filterOptions[1].value"
+          multiple
+          placeholder="专业"
+          @change="$_request"
+        >
+          <el-option
+            v-for="item in filterOptions[1].options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-col>
+    </el-row>
+    <el-scrollbar class="course-table-scroll" v-loading="loading">
       <el-table
         :border="showStyle"
         :data="tableData"
@@ -81,26 +135,82 @@ export default {
   },
   data() {
     return {
+      loading: true,
       courseName: null,
       showStyle: true,
       tableData: [],
+      filterOptions: [
+        {
+          label: "试卷名",
+          options: [],
+          value: [],
+        },
+        {
+          label: "专业",
+          options: [],
+          value: [],
+        },
+      ],
     };
   },
   methods: {
+    // 清除所有筛选项
+    clearFilter() {
+      this.filterOptions.forEach((item) => (item.value = []));
+      this.queryReviewData()
+    },
+    // 根据筛选项来请求数据
+    $_request() {
+      console.log(this.filterOptions)
+      console.log("====> 发送请求")
+    },
+
+    // 获取所有参与该教师考试的学生数据
+    // 获取所有该教师的试卷
     async queryReviewData() {
       this.tableData = [];
+      this.filterOptions[0].options = []
+      this.filterOptions[1].options = []
       let id = JSON.parse(localStorage.getLocalStorage("userInfo"))?._id;
-      let { data } = await queryAssignExamByTeaId(id);
-      // console.log(data);
+      let { data, success } = await queryAssignExamByTeaId(id);
+      if(success) { this.loading = false }
       data.forEach((item) => {
         item.totalScore = this.totalScore(item.content);
+        let majorObj = {}, examNameObj ={}
+
         if (this.status === "all") {
+          majorObj.value = item.major
+          majorObj.label = item.major
+          examNameObj.label = item.content.examName
+          examNameObj.value = item.content.examName
+          this.filterOptions[0].options.push(examNameObj)
+          this.filterOptions[1].options.push(majorObj)
           this.tableData.push(item);
         } else if (this.status === "finished" && item.status === "finished") {
+          majorObj.value = item.major
+          majorObj.label = item.major
+          examNameObj.label = item.content.examName
+          examNameObj.value = item.content.examName
+          this.filterOptions[0].options.push(examNameObj)
+          this.filterOptions[1].options.push(majorObj)
           this.tableData.push(item);
         } else if (this.status === "other" && item.status !== "finished") {
+          majorObj.value = item.major
+          majorObj.label = item.major
+          examNameObj.label = item.content.examName
+          examNameObj.value = item.content.examName
+          this.filterOptions[0].options.push(examNameObj)
+          this.filterOptions[1].options.push(majorObj)
           this.tableData.push(item);
         }
+        let obj = {}
+        this.filterOptions.forEach((item, index) => {
+          this.filterOptions[index].options = this.filterOptions[index].options.reduce((defaultArr, next) => {
+            obj[next.label] ? "" : obj[next.label] = true && defaultArr.push(next)
+            return defaultArr
+          }, [])
+        })
+
       });
     },
     markPaper(obj) {
@@ -154,7 +264,7 @@ export default {
     .el-select__tags-text
       color: #000
   .course-table-scroll
-    height: calc(100vh - 180px)
+    height: calc(100vh - 280px)
     .el-scrollbar__wrap
       overflow-x: hidden
     th

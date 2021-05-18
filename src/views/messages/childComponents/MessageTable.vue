@@ -27,7 +27,7 @@
           label="操作"
           align="center"
           width="120"
-          v-show="status === 'tea'"
+          v-if="status === 'tea'"
         >
           <template slot-scope="scope">
             <el-button
