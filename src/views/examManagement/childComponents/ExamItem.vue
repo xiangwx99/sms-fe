@@ -66,7 +66,7 @@ import { deleteExam } from "../../../network/exam";
 import { notifyError, notifySuccess, notifyTips } from "function/utils";
 import AssignDialog from "./AssignDialog";
 export default {
-  name: "ExamIte",
+  name: "ExamItem",
   props: {
     examData: {
       type: Object,
@@ -107,7 +107,6 @@ export default {
   },
   data() {
     return {
-      defaultImgUrl: require("../../../assets/img/exam_img.jpeg"),
       path: this.$route.fullPath,
       status: "",
       countScore: 0,

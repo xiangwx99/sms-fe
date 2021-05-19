@@ -1,14 +1,18 @@
 <template>
   <div>
-    <el-scrollbar class="message-table">
+    <el-row>
       <el-button
         type="primary"
         round
         v-show="status === 'tea'"
         @click="dialogVisible = true"
-        style="margin-bottom: 20px"
         >发送通知</el-button
       >
+      <el-row
+        style="width: 100%; height: 1px; background-color: #E4E7ED; margin: 12px 0"
+      ></el-row>
+    </el-row>
+    <el-scrollbar class="message-table">
       <el-table
         :border="showStyle"
         :data="tableData"
@@ -185,7 +189,7 @@ export default {
 
 <style lang="sass">
 .message-table
-  height: calc(100vh - 144px)
+  height: calc(100vh - 200px)
   th
     background-color: #e8f7ff
     color: #666

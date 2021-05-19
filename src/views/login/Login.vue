@@ -76,8 +76,7 @@ export default {
         ],
       },
       banner: {
-        backgroundImage:
-          "url(" + require("../../assets/img/login_banner.jpg") + ")",
+        backgroundImage: "url(" + require("../../assets/img/bg.svg") + ")",
         backgroundRepeat: "norepeat",
         backgroundSize: "100% 100%",
         opacity: 0.8,
@@ -199,11 +198,12 @@ export default {
   width: 100vw
   .box-card
     position: absolute
-    background-color: #F3F4F6
     top: 50%
     left: 50%
     transform: translate(-50%, -50%)
     width: 28%
+    box-shadow: 0 6px 20px 5px rgb(40 120 255 / 10%), 0 16px 24px 2px rgb(0 0 0 / 5%)
+    border-radius: 12px
   .el-row
     text-align: center
   img, .head-portrait
