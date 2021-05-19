@@ -186,6 +186,9 @@ export default {
 <style lang="sass">
 .message-table
   height: calc(100vh - 144px)
+  th
+    background-color: #e8f7ff
+    color: #666
   .el-scrollbar__wrap
     overflow-x: hidden
 .message_dialog

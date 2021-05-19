@@ -21,7 +21,7 @@
           <el-button
             style="color: #19AAF8; padding: 0px; border: none"
             @click="clearFilter"
-          >清除所有</el-button
+            >清除所有</el-button
           >
         </div>
       </el-row>
@@ -117,7 +117,10 @@
 </template>
 
 <script>
-import { queryAssignExamByTeaId } from "network/assignExam";
+import {
+  queryAssignExamByTeaId,
+  queryAssignExamByCondition,
+} from "network/assignExam";
 import localStorage from "function/localstorage";
 import { notifyTips } from "function/utils";
 export default {
@@ -157,60 +160,81 @@ export default {
     // 清除所有筛选项
     clearFilter() {
       this.filterOptions.forEach((item) => (item.value = []));
-      this.queryReviewData()
+      this.queryReviewData();
     },
     // 根据筛选项来请求数据
-    $_request() {
-      console.log(this.filterOptions)
-      console.log("====> 发送请求")
+    async $_request() {
+      this.tableData = [];
+      let id = JSON.parse(localStorage.getLocalStorage("userInfo"))?._id;
+      let { data } = await queryAssignExamByCondition(
+        id,
+        this.filterOptions[0].value,
+        this.filterOptions[1].value
+      );
+      data.forEach((item) => {
+        item.totalScore = this.totalScore(item.content);
+        if (this.status === "all") {
+          this.tableData.push(item);
+        } else if (this.status === "finished" && item.status === "finished") {
+          this.tableData.push(item);
+        } else if (this.status === "other" && item.status !== "finished") {
+          this.tableData.push(item);
+        }
+      });
     },
 
     // 获取所有参与该教师考试的学生数据
     // 获取所有该教师的试卷
     async queryReviewData() {
       this.tableData = [];
-      this.filterOptions[0].options = []
-      this.filterOptions[1].options = []
+      this.filterOptions[0].options = [];
+      this.filterOptions[1].options = [];
       let id = JSON.parse(localStorage.getLocalStorage("userInfo"))?._id;
       let { data, success } = await queryAssignExamByTeaId(id);
-      if(success) { this.loading = false }
+      if (success) {
+        this.loading = false;
+      }
       data.forEach((item) => {
         item.totalScore = this.totalScore(item.content);
-        let majorObj = {}, examNameObj ={}
+        let majorObj = {},
+          examNameObj = {};
 
         if (this.status === "all") {
-          majorObj.value = item.major
-          majorObj.label = item.major
-          examNameObj.label = item.content.examName
-          examNameObj.value = item.content.examName
-          this.filterOptions[0].options.push(examNameObj)
-          this.filterOptions[1].options.push(majorObj)
+          majorObj.value = item.major;
+          majorObj.label = item.major;
+          examNameObj.label = item.content.examName;
+          examNameObj.value = item.content.examName;
+          this.filterOptions[0].options.push(examNameObj);
+          this.filterOptions[1].options.push(majorObj);
           this.tableData.push(item);
         } else if (this.status === "finished" && item.status === "finished") {
-          majorObj.value = item.major
-          majorObj.label = item.major
-          examNameObj.label = item.content.examName
-          examNameObj.value = item.content.examName
-          this.filterOptions[0].options.push(examNameObj)
-          this.filterOptions[1].options.push(majorObj)
+          majorObj.value = item.major;
+          majorObj.label = item.major;
+          examNameObj.label = item.content.examName;
+          examNameObj.value = item.content.examName;
+          this.filterOptions[0].options.push(examNameObj);
+          this.filterOptions[1].options.push(majorObj);
           this.tableData.push(item);
         } else if (this.status === "other" && item.status !== "finished") {
-          majorObj.value = item.major
-          majorObj.label = item.major
-          examNameObj.label = item.content.examName
-          examNameObj.value = item.content.examName
-          this.filterOptions[0].options.push(examNameObj)
-          this.filterOptions[1].options.push(majorObj)
+          majorObj.value = item.major;
+          majorObj.label = item.major;
+          examNameObj.label = item.content.examName;
+          examNameObj.value = item.content.examName;
+          this.filterOptions[0].options.push(examNameObj);
+          this.filterOptions[1].options.push(majorObj);
           this.tableData.push(item);
         }
-        let obj = {}
+        let obj = {};
         this.filterOptions.forEach((item, index) => {
-          this.filterOptions[index].options = this.filterOptions[index].options.reduce((defaultArr, next) => {
-            obj[next.label] ? "" : obj[next.label] = true && defaultArr.push(next)
-            return defaultArr
-          }, [])
-        })
-
+          this.filterOptions[index].options = this.filterOptions[
+            index
+          ].options.reduce((defaultArr, next) => {
+            obj[next.label]
+              ? ""
+              : (obj[next.label] = true && defaultArr.push(next));
+            return defaultArr;
+          }, []);
+        });
       });
     },
     markPaper(obj) {

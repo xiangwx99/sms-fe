@@ -54,3 +54,15 @@ export function queryAssignExamByTeaId(id) {
     method: "post",
   });
 }
+
+export function queryAssignExamByCondition(id, examName, major) {
+  return request({
+    url: "/queryByCondition",
+    data: {
+      id,
+      examName,
+      major,
+    },
+    method: "post",
+  });
+}
