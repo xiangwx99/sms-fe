@@ -66,3 +66,28 @@ export function queryAssignExamByCondition(id, examName, major) {
     method: "post",
   });
 }
+
+export function queryAnalysis(id, examName, department, major, grade, classes) {
+  return request({
+    url: "/analysis",
+    data: {
+      id,
+      examName,
+      department,
+      major,
+      grade,
+      classes,
+    },
+    method: "post",
+  });
+}
+
+export function analysisStu(id) {
+  return request({
+    url: "/analysisStu",
+    data: {
+      id,
+    },
+    method: "post",
+  });
+}

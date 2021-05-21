@@ -1,24 +1,31 @@
 <template>
   <el-tabs v-model="tab" @tab-click="handleClick">
-    <el-tab-pane label="成绩分析" name="tab-1"><ExamAnalysis /></el-tab-pane>
-    <el-tab-pane label="成绩中心" name="tab-2"><CourseTable /></el-tab-pane>
+    <el-tab-pane label="成绩分析" name="tab-2" v-if="status === 'tea'"
+      ><ExamAnalysis
+    /></el-tab-pane>
+    <el-tab-pane label="成绩中心" name="tab-1"
+      ><ExamAnalysisTable
+    /></el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
-import CourseTable from "./childComponents/CourseTable";
+import ExamAnalysisTable from "./childComponents/ExamAnalysisTable";
 import ExamAnalysis from "./childComponents/ExamAnalysis";
+import localStorage from "function/localstorage";
 export default {
   name: "Course",
   components: {
-    CourseTable,
+    ExamAnalysisTable,
     ExamAnalysis,
   },
   mounted() {
     this.tab = `tab-${this.tabs}`;
+    this.status = localStorage.getLocalStorage("status");
   },
   data() {
     return {
+      status: "stu",
       tab: "tab-1",
       tabSelect: null,
     };
