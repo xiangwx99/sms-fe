@@ -82,7 +82,7 @@
                 v-if="this.status === 'tea'"
                 @click.native="choosePath('/examManagement', '试卷管理')"
                 ><i class="el-icon-suitcase" style="color: #fff"></i
-                >试卷管理</el-menu-item
+                >考试管理</el-menu-item
               >
               <el-menu-item
                 index="1-6"
@@ -96,7 +96,7 @@
                 index="1-3"
                 @click.native="choosePath('/addstudent', '学生录入')"
                 ><i class="el-icon-folder-opened" style="color: #fff"></i
-                >学生录入</el-menu-item
+                >考生录入</el-menu-item
               >
               <el-menu-item
                 index="1-5"

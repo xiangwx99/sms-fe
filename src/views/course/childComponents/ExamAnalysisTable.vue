@@ -1,5 +1,8 @@
 <template>
   <div class="course-table">
+    <el-row v-if="tableData.length > 0"
+      ><el-button type="text" @click="downFile">导出成绩单</el-button></el-row
+    >
     <el-row style="margin-bottom: 20px;" v-if="status === 'tea'">
       <el-row
         style="margin-bottom: 15px; font-size: 14px; line-height: 24px; height: 24px"
@@ -140,11 +143,13 @@ import InputSearch from "components/inputSearch/InputSearch";
 import Pagination from "components/pagination/Pagination";
 import dataOptions from "mixins/getNation";
 import localStorage from "function/localstorage";
+import { deepClone } from "function/utils";
 import {
   queryAssignExamByTeaId,
   queryAnalysis,
   analysisStu,
 } from "network/assignExam";
+import XLSX from "xlsx";
 export default {
   name: "ExamAnalysisTable",
   mixins: [dataOptions],
@@ -206,12 +211,24 @@ export default {
           value: [],
         },
       ],
+      excelTitle: [
+        "院系",
+        "专业",
+        "班级",
+        "姓名",
+        "总分",
+        "选择题总分",
+        "判断题总分",
+        "填空题总分",
+        "简答题总分",
+      ],
     };
   },
   methods: {
     clearFilter() {
       this.showResult = false;
       this.majorOptions = [];
+      this.tableData = [];
       this.filterOptions.forEach((item) => {
         if (Array.isArray(item.value)) {
           item.value = [];
@@ -337,6 +354,73 @@ export default {
           }, []);
         });
       });
+    },
+    // 下载成绩单
+    downFile() {
+      let excelData = deepClone(this.tableData);
+      for (let i = 0; i < excelData.length; i++) {
+        // 修改对象的属性名
+        this.formatIssueKey(excelData[i]);
+      }
+      let excelDatas = {
+        // 定义表名
+        SheetNames: ["任务"],
+        Sheets: {
+          任务: {
+            "!merges": [],
+          },
+        },
+      };
+      // 通过工具将对象转换为表对象
+      excelDatas.Sheets["任务"] = XLSX.utils.json_to_sheet(excelData);
+      // 将数据导出到文件中
+
+      XLSX.writeFile(excelDatas, "成绩单.xlsx");
+    },
+    formatIssueKey(data) {
+      for (let key in data) {
+        switch (key) {
+          case "name":
+            data["姓名"] = data[key];
+            delete data[key];
+            break;
+          case "classes":
+            data["班级"] = data[key];
+            delete data[key];
+            break;
+          case "totalScore":
+            data["总分"] = data[key];
+            delete data[key];
+            break;
+          case "choiceCount":
+            data["选择题总分"] = data[key];
+            delete data[key];
+            break;
+          case "issueCount":
+            data["判断题总分"] = data[key];
+            delete data[key];
+            break;
+          case "completionCount":
+            data["填空题总分"] = data[key];
+            delete data[key];
+            break;
+          case "shortCount":
+            data["简答题总分"] = data[key];
+            delete data[key];
+            break;
+          case "department":
+            data["院系"] = data[key];
+            delete data[key];
+            break;
+          case "major":
+            data["专业"] = data[key];
+            delete data[key];
+            break;
+          default:
+            delete data[key];
+            break;
+        }
+      }
     },
   },
 };

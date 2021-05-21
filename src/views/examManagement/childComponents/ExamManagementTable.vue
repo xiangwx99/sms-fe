@@ -62,4 +62,11 @@ export default {
       overflow-x: hidden
   .el-scrollbar__view > div
     width: 100%
+  .exam-list
+    display: grid
+    width: 100%
+    display: grid
+    justify-content: space-between
+    grid-template-columns: repeat(auto-fill, 240px)
+    grid-gap: 0 32px
 </style>

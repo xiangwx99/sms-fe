@@ -44,7 +44,7 @@
 
         <el-dropdown>
           <el-button type="text" style="padding: 8px 12px;">
-            添加学生
+            添加考生
           </el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item

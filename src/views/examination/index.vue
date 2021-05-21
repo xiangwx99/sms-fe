@@ -1,7 +1,7 @@
 <template>
   <div class="exam-center">
     <el-scrollbar class="exam-mannagement-scroll">
-      <div>
+      <div class="exam-list">
         <ExamItem
           v-for="(item, index) in examList"
           :key="index"
@@ -38,6 +38,12 @@ export default {
 <style lang="sass">
 .exam-center
   padding-top: 20px
+  .exam-list
+    width: 100%
+    display: grid
+    justify-content: space-between
+    grid-template-columns: repeat(auto-fill, 240px)
+    grid-gap: 0 32px
   .exam-mannagement-scroll
     height: calc(100vh - 140px)
 
