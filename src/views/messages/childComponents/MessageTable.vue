@@ -137,22 +137,23 @@ export default {
     addMessage() {
       this.dialogVisible = false;
       if (this.message.trim().length > 0) {
-        addMessages(this.message).then((res) => {
-          if (res.err_code === 1) {
-            this.queryTableData(this.page, this.size);
-            let message = this.message;
-            this.message = "";
-            this.$message({
-              type: "success",
-              message: "你添加的内容是: " + message,
-            });
-          } else {
-            this.$message({
-              message: "😭服务器崩溃了",
-              type: "error",
-            });
-          }
-        });
+        websocketsend(this.message);
+        // addMessages(this.message).then((res) => {
+        //   if (res.err_code === 1) {
+        //     this.queryTableData(this.page, this.size);
+        //     let message = this.message;
+        //     this.message = "";
+        //     this.$message({
+        //       type: "success",
+        //       message: "你添加的内容是: " + message,
+        //     });
+        //   } else {
+        //     this.$message({
+        //       message: "😭服务器崩溃了",
+        //       type: "error",
+        //     });
+        //   }
+        // });
       } else {
         this.$message({
           message: "😭添加内容不能为空",

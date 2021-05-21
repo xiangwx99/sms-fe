@@ -15,7 +15,12 @@
           <el-button
             class="el-iconmessage icon message"
             @click="choosePath('/messages', '查看消息')"
-          ></el-button>
+          >
+            <span
+              v-show="showDot"
+              style="position: absolute; width: 6px; height: 6px; border-radius: 50%; background: red; right: -3px"
+            ></span>
+          </el-button>
           <el-dropdown class="right">
             <div style="cursor: pointer">
               <span
@@ -134,8 +139,18 @@ export default {
       localStorage.getLocalStorage("userInfo")
     )?.phoneNumber;
   },
+  created() {
+    this.initWebSocket();
+    window.websocketsend = this.websocketsend;
+    window.websocketonmessage = this.websocketonmessage;
+  },
+  destroyed() {
+    this.websock.close(); //离开路由之后断开websocket连接
+  },
   data() {
     return {
+      showDot: false,
+      websock: null,
       status: "tea",
       name: "",
       phoneNumber: "",
@@ -146,6 +161,9 @@ export default {
 
   methods: {
     choosePath(path, options) {
+      if (path === "/messages") {
+        this.showDot = false;
+      }
       if (path === "/loginout") {
         localStorage.removeAllLocalStorage();
         this.$router.push("/login");
@@ -153,6 +171,55 @@ export default {
         this.$router.push(path);
         this.curOption = options;
       }
+    },
+    initWebSocket() {
+      //初始化weosocket
+      const wsuri = "ws://127.0.0.1:8000/addMessages";
+      this.websock = new WebSocket(wsuri);
+      this.websock.onmessage = this.websocketonmessage;
+      this.websock.onopen = this.websocketonopen;
+      this.websock.onerror = this.websocketonerror;
+      this.websock.onclose = this.websocketclose;
+    },
+    websocketonopen() {
+      console.log("开始建立连接...");
+      //连接建立之后执行send方法发送数据
+      // let actions = { test: "成功建立连接!" };
+      // this.websocketsend(JSON.stringify(actions));
+    },
+    websocketonerror() {
+      //连接建立失败重连
+      console.log("===> 连接建立失败");
+      this.initWebSocket();
+    },
+    websocketonmessage(e) {
+      //数据接收
+      const redata = JSON.parse(e.data);
+      if (redata.success) {
+        this.showDot = true;
+        this.$message({
+          type: "success",
+          message: "你添加的内容是: " + redata.data,
+        });
+      } else if (!redata.success) {
+        this.$message({
+          message: "😭服务器崩溃了",
+          type: "error",
+        });
+      } else {
+        this.$message({
+          message: "😭webscoket连接崩溃了",
+          type: "error",
+        });
+      }
+    },
+    websocketsend(Data) {
+      //数据发送
+      this.websock.send(Data);
+    },
+    websocketclose(e) {
+      //关闭
+      console.log("断开连接😭");
     },
   },
 };
@@ -179,6 +246,7 @@ export default {
     color: #666666
     padding: 0
     border: none
+    position: relative
   .message:focus
     background-color: #ffffff
   ul.el-menu

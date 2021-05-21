@@ -37,9 +37,9 @@
           <span v-show="status === '未完成'" style="color: #ced6e0;"
             >未完成</span
           >
-          <span v-show="status === '未开始'" style="color: #747d8c"
-            >未开始</span
-          >
+          <span v-show="status === '未开始'" style="color: #747d8c">{{
+            showStatus
+          }}</span>
           <span v-show="status === '进行中'" style="color: #00b894"
             >进行中</span
           >
@@ -63,7 +63,12 @@
 
 <script>
 import { deleteExam } from "../../../network/exam";
-import { notifyError, notifySuccess, notifyTips } from "function/utils";
+import {
+  notifyError,
+  notifySuccess,
+  notifyTips,
+  timeFormat,
+} from "function/utils";
 import AssignDialog from "./AssignDialog";
 export default {
   name: "ExamItem",
@@ -85,6 +90,18 @@ export default {
       let endTime = new Date(this.examData.time[1]);
       if (new Date() < startTime) {
         this.status = "未开始";
+
+        let year = startTime.getFullYear();
+        let month = startTime.getMonth() + 1;
+        month = month.length > 1 ? month : "0" + month;
+        let day = startTime.getDay() + 1;
+        day = day.length > 1 ? day : "0" + day;
+        let hour = startTime.getHours();
+        hour = hour.length > 1 ? hour : "0" + hour;
+        let min = startTime.getMinutes();
+        min = min.length > 1 ? min : "0" + min;
+        this.showStatus =
+          year + ":" + month + ":" + day + ":" + hour + ":" + min + "开始";
       } else if (new Date() > endTime) {
         if (this.examData.status === "pending") {
           this.status = "未完成";
@@ -110,6 +127,7 @@ export default {
       path: this.$route.fullPath,
       status: "",
       countScore: 0,
+      showStatus: null,
     };
   },
   methods: {
