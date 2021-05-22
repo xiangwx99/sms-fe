@@ -1,7 +1,10 @@
 <template>
   <div class="course-table">
     <el-row v-if="tableData.length > 0"
-      ><el-button type="text" @click="downFile">导出成绩单</el-button></el-row
+      ><el-button type="text" @click="downFile">导出为excel</el-button>
+      <el-button type="text" @click="ExportSavePdf('成绩单')"
+        >导出为pdf</el-button
+      ></el-row
     >
     <el-row style="margin-bottom: 20px;" v-if="status === 'tea'">
       <el-row
@@ -108,6 +111,8 @@
         :data="tableData"
         style="width: 100%; margin-top: 5px"
         v-if="showResult"
+        ref="pdfContent"
+        id="pdfContent"
       >
         <el-table-column prop="classes" label="班级" align="center">
         </el-table-column>
@@ -421,6 +426,9 @@ export default {
             break;
         }
       }
+    },
+    downFilePdf() {
+      console.log("====>");
     },
   },
 };

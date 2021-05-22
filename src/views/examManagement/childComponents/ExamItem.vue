@@ -94,8 +94,8 @@ export default {
         let year = startTime.getFullYear();
         let month = startTime.getMonth() + 1;
         month = month.length > 1 ? month : "0" + month;
-        let day = startTime.getDay() + 1;
-        day = day.length > 1 ? day : "0" + day;
+        let day = startTime.getDate();
+        // day = day.length > 1 ? day : "0" + day;
         let hour = startTime.getHours();
         hour = hour.length > 1 ? hour : "0" + hour;
         let min = startTime.getMinutes();
