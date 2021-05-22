@@ -445,7 +445,7 @@ export default {
     .el-select__tags-text
       color: #000
   .course-table-scroll
-    height: calc(100vh - 276px)
+    height: calc(100vh - 306px)
     .el-scrollbar__wrap
       overflow-x: hidden
     th

@@ -18,13 +18,13 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item icon="el-icon-share" @click.native="assignExam">
-                指派
+                分发试卷
               </el-dropdown-item>
               <el-dropdown-item
                 icon="el-icon-delete"
                 @click.native="handleDelete(examData._id)"
               >
-                删除
+                删除试卷
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>

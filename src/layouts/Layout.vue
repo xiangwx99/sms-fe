@@ -17,8 +17,7 @@
             @click="choosePath('/messages', '查看消息')"
           >
             <span
-              v-show="showDot"
-              style="position: absolute; width: 6px; height: 6px; border-radius: 50%; background: red; right: -3px"
+              style="position: absolute; width: 6px; height: 6px; border-radius: 50%; background: red; right: -3px; display: none"
             ></span>
           </el-button>
           <el-dropdown class="right">
@@ -189,12 +188,13 @@ export default {
     },
     websocketonerror() {
       //连接建立失败重连
-      console.log("===> 连接建立失败");
+      console.log("===> 连接建立失败, 重新连接");
       this.initWebSocket();
     },
     websocketonmessage(e) {
       //数据接收
       const redata = JSON.parse(e.data);
+      console.log(redata);
       if (redata.success) {
         this.showDot = true;
         this.$message({
@@ -220,6 +220,7 @@ export default {
     websocketclose(e) {
       //关闭
       console.log("断开连接😭");
+      this.initWebSocket();
     },
   },
 };

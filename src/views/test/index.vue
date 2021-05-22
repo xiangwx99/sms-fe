@@ -318,19 +318,19 @@ export default {
     };
     let blurNum = 1;
     let that = this;
-    // $(window).on("blur resize", function() {
-    //   if (blurNum > 3) {
-    //     alert("你已经违规3次，考试结束！");
-    //     that.$router.push("/");
-    //   } else {
-    //     alert("考试中切换窗口违规" + blurNum + "次！");
-    //   }
-    //   blurNum++;
-    // });
+    $(window).on("blur resize", function() {
+      if (blurNum > 3) {
+        alert("你已经违规3次，考试结束！");
+        that.finishTest();
+      } else {
+        alert("考试中切换窗口违规" + blurNum + "次！");
+      }
+      blurNum++;
+    });
 
-    // $(window).on("beforeunload", function() {
-    //   return "离开此页面将退出考试!";
-    // });
+    $(window).on("beforeunload", function() {
+      return "离开此页面将退出考试!";
+    });
   },
   data() {
     return {
@@ -475,7 +475,7 @@ export default {
         Number(this.min) === 0 &&
         Number(this.second) === 0
       ) {
-        console.log("==========>考试结束");
+        this.finishTest();
         return;
       } else {
         // 递归每秒调用countTime方法，显示动态时间效果,
