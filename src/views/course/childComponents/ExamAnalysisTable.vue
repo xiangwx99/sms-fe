@@ -379,7 +379,6 @@ export default {
       // 通过工具将对象转换为表对象
       excelDatas.Sheets["任务"] = XLSX.utils.json_to_sheet(excelData);
       // 将数据导出到文件中
-
       XLSX.writeFile(excelDatas, "成绩单.xlsx");
     },
     formatIssueKey(data) {

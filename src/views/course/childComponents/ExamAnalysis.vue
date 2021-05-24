@@ -256,7 +256,6 @@ export default {
     // 扇形统计图
     sectorCharts() {
       var myChart = this.$echarts.init(document.getElementById("sector"));
-
       myChart.setOption({
         title: {
           text: "成绩扇形统计图",

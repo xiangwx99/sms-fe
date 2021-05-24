@@ -14,28 +14,19 @@ export default {
       currentTime =
         cur.getFullYear() + "-" + (cur.getMonth() + 1) + "-" + cur.getDate();
       var element = document.getElementById("pdfContent");
-
       html2canvas(element, {
         logging: false,
       }).then(function(canvas) {
         var pdf = new JSPDF("p", "mm", "a4"); // A4纸，纵向
-
         var ctx = canvas.getContext("2d");
-
         var a4w = 170;
         var a4h = 257; // A4大小，210mm x 297mm，四边各保留20mm的边距，显示区域170x257
-
         var imgHeight = Math.floor((a4h * canvas.width) / a4w); // 按A4显示比例换算一页图像的像素高度
-
         var renderedHeight = 0;
-
         while (renderedHeight < canvas.height) {
           var page = document.createElement("canvas");
-
           page.width = canvas.width;
-
           page.height = Math.min(imgHeight, canvas.height - renderedHeight); // 可能内容不足一页
-
           // 用getImageData剪裁指定区域，并画到前面创建的canvas对象中
           page
             .getContext("2d")
@@ -63,8 +54,6 @@ export default {
           let showContent = currentTime + "-" + phoneNum + "";
           pdf.setFontSize(12);
           pdf.setTextColor("#ecf0f1");
-          // pdf.setTextColor("red");
-
           for (let i = 0; i < 5; i++) {
             pdf.text(i * 50, 20, showContent, 25);
             for (let j = 0; j < 20; j++) {
@@ -73,9 +62,7 @@ export default {
           }
           if (renderedHeight < canvas.height) {
             pdf.addPage();
-            // pdf.text(20, 20, "Do you like that?");
           } // 如果后面还有内容，添加一个空页
-          // delete page;
         }
         pdf.save(htmlTitle + currentTime);
       });

@@ -48,10 +48,10 @@
           >
           <span v-show="status === '已完成'">
             <span style="color: #009432" v-show="countScore > 59">{{
-              countScore
+              countScore + "分"
             }}</span>
             <span style="color: #EA2027" v-show="countScore < 60">{{
-              countScore
+              countScore + "分"
             }}</span>
           </span>
         </span>
@@ -161,6 +161,8 @@ export default {
               window.open(`/test?_id=${item._id}`, "_blank");
             } else if (item.status === "half") {
               notifyTips(this.$message, "试卷已提交, 不允许查看");
+            } else {
+              this.$router.push(`/mark-papers?id=${item._id}`);
             }
           }
         });
